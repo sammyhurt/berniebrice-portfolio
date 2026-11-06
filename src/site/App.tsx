@@ -30,7 +30,7 @@ export default function App() {
     );
   else page = <NotFound />;
   return (
-    <div className="bg-background text-foreground min-h-dvh">
+    <div className="bg-background text-foreground flex min-h-dvh flex-col">
       <Header />
       {page}
       <Footer />

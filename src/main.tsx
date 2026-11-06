@@ -1,4 +1,3 @@
-import "@fontsource-variable/plus-jakarta-sans";
 import "@/styles/global.css";
 
 import { createRoot } from "react-dom/client";

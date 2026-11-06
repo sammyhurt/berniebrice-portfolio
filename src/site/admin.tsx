@@ -63,7 +63,7 @@ export default function Admin() {
 
   if (!pass || (err && !data)) {
     return (
-      <main className="mx-auto grid max-w-sm gap-4 px-4 py-20">
+      <main className="mx-auto grid max-w-sm gap-4 px-5 pt-32 pb-20">
         <div className="bg-primary/10 text-primary mx-auto grid size-12 place-items-center rounded-2xl">
           <Lock className="size-6" />
         </div>
@@ -104,7 +104,7 @@ export default function Admin() {
     }
   };
   return (
-    <main className="mx-auto max-w-5xl px-4 pt-8 sm:px-6">
+    <main className="mx-auto max-w-5xl px-5 pt-28 pb-10 sm:px-8">
       <h1 className="text-3xl font-semibold tracking-tight">Application links</h1>
       <p className="text-muted-foreground mt-2 max-w-2xl">Make one link per application and paste it into the application or your email. When someone opens it, you see it here: which company, which pages, and when. Only the link code, the page and the device type are recorded.</p>
       <div className="border-border bg-card mt-6 grid gap-3 rounded-2xl border p-5">

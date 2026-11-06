@@ -1,6 +1,7 @@
 import ArrowRight from "@iconify-react/solar/arrow-right-linear";
 import Moon from "@iconify-react/solar/moon-linear";
 import Sun from "@iconify-react/solar/sun-2-linear";
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -77,30 +78,33 @@ function ThemeButton() {
 
 const NAV = [
   { to: "/#work", label: "Work" },
+  { to: "/#process", label: "Process" },
   { to: "/#experience", label: "Experience" },
   { to: "/#skills", label: "Skills" },
   { to: "/resume", label: "Resume" },
 ];
 
+/** Floating pill header from the template. */
 export function Header() {
   return (
-    <header className="no-print border-border/70 bg-background/85 sticky top-0 z-30 border-b backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
-        <A to="/" className="flex items-center gap-2 font-semibold tracking-tight" aria-label="Bernie Brice, home">
-          <span className="bg-primary text-primary-foreground grid size-8 place-items-center rounded-lg text-xs font-bold">{profile.initials}</span>
-          <span className="hidden sm:inline">{profile.name}</span>
-        </A>
-        <nav className="ml-auto flex items-center gap-0.5 text-sm" aria-label="Main">
-          {NAV.map((n) => (
-            <A key={n.to} to={n.to} className="text-muted-foreground hover:text-foreground hover:bg-muted rounded-full px-2.5 py-1.5 sm:px-3">
-              {n.label}
-            </A>
-          ))}
-          <A to="/#contact" className="bg-primary text-primary-foreground ml-1 hidden rounded-full px-3.5 py-1.5 font-medium sm:inline-block">
-            Contact
+    <header className="no-print fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-2 px-3 py-4 sm:px-8 lg:px-11">
+      <A to="/" className="bg-background/85 rounded-full px-4 py-2 text-sm font-bold tracking-tight shadow-sm backdrop-blur" aria-label="Bernie Brice, home">
+        {profile.name}
+      </A>
+      <nav aria-label="Primary" className="bg-background/85 hidden items-center gap-1 rounded-full p-1 shadow-sm backdrop-blur md:flex">
+        {NAV.map((n) => (
+          <A key={n.to} to={n.to} className="text-foreground/80 hover:bg-muted hover:text-foreground rounded-full px-4 py-1.5 text-sm font-medium transition-colors">
+            {n.label}
           </A>
-        </nav>
-        <ThemeButton />
+        ))}
+      </nav>
+      <div className="flex items-center gap-1.5">
+        <div className="bg-background/85 rounded-full shadow-sm backdrop-blur">
+          <ThemeButton />
+        </div>
+        <A to="/#contact" className="bg-primary text-primary-foreground rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">
+          Contact
+        </A>
       </div>
     </header>
   );
@@ -108,8 +112,8 @@ export function Header() {
 
 export function Footer() {
   return (
-    <footer className="no-print border-border mt-16 border-t">
-      <div className="text-muted-foreground mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-8 text-sm sm:px-6">
+    <footer className="no-print">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-x-5 gap-y-2 px-5 py-8 text-sm sm:px-8 lg:px-11">
         <span>
           {profile.name} · {profile.location}
         </span>
@@ -125,13 +129,27 @@ export function Footer() {
   );
 }
 
+/** Fade-up on scroll, as in the template. Respects reduced motion. */
+export function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+  const reduced = useReducedMotion();
+  return (
+    <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}>
+      {children}
+    </motion.div>
+  );
+}
+
 export function Section({ id, eyebrow, title, lead, children, className }: { id?: string; eyebrow: string; title: string; lead?: string; children: ReactNode; className?: string }) {
   return (
-    <section id={id} className={cn("mx-auto max-w-6xl scroll-mt-20 px-4 pt-16 sm:px-6", className)}>
-      <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">{eyebrow}</p>
-      <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
-      {lead ? <p className="text-muted-foreground mt-2 max-w-2xl">{lead}</p> : null}
-      <div className="mt-8">{children}</div>
+    <section id={id} className={cn("scroll-mt-20 px-5 py-20 sm:px-8 lg:px-11 lg:py-28", className)}>
+      <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">{eyebrow}</p>
+          <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{title}</h2>
+        </div>
+        {lead ? <p className="text-muted-foreground max-w-sm">{lead}</p> : null}
+      </Reveal>
+      {children}
     </section>
   );
 }
@@ -139,16 +157,16 @@ export function Section({ id, eyebrow, title, lead, children, className }: { id?
 /** A simple left-to-right diagram (top-to-bottom on phones). Generic labels only. */
 export function FlowDiagram({ flow, className }: { flow: FlowT; className?: string }) {
   return (
-    <figure className={cn("border-border bg-card rounded-2xl border p-4 sm:p-5", className)}>
+    <figure className={cn("bg-card rounded-[1.75rem] p-4 shadow-sm sm:p-6", className)}>
       <ol className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
         {flow.nodes.map((n, i) => (
           <li key={n} className="flex flex-col items-center gap-2 sm:flex-1 sm:flex-row">
-            <span className="bg-secondary text-secondary-foreground w-full rounded-xl px-3 py-2.5 text-center text-sm font-medium sm:min-h-14 sm:place-content-center">{n}</span>
+            <span className="bg-secondary text-secondary-foreground grid w-full place-content-center rounded-2xl px-3 py-3 text-center text-sm font-medium sm:min-h-16">{n}</span>
             {i < flow.nodes.length - 1 ? <ArrowRight className="text-muted-foreground size-4 shrink-0 rotate-90 sm:rotate-0" aria-hidden /> : null}
           </li>
         ))}
       </ol>
-      <figcaption className="text-muted-foreground mt-3 text-xs">{flow.caption}</figcaption>
+      <figcaption className="text-muted-foreground mt-3 font-mono text-[11px] tracking-[0.12em] uppercase">{flow.caption}</figcaption>
     </figure>
   );
 }

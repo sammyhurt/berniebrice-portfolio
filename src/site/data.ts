@@ -87,7 +87,7 @@ export const jobs: Job[] = [
 export interface Flow { nodes: string[]; caption: string }
 export interface CaseStudy {
   slug: string; title: string; org: string; when: string; tag: string; summary: string;
-  problem: string; role: string; did: string[]; stack: string[]; results: string[]; flow: Flow; next?: string; status?: string;
+  problem: string; role: string; did: string[]; stat?: string; stack: string[]; results: string[]; flow: Flow; next?: string; status?: string;
 }
 export const studies: CaseStudy[] = [
   {
@@ -123,7 +123,7 @@ export const studies: CaseStudy[] = [
     flow: { nodes: ["Site survey", "Network readiness", "Move and setup", "Post-move support", "Blueprint updated"], caption: "The repeatable move process." },
   },
   {
-    slug: "pbx-to-voip", title: "Moving a luxury hotel from PBX to VoIP", org: "The Mark Hotel", when: "2023 – 2024", tag: "Migration",
+    slug: "pbx-to-voip", stat: "500 users · 99.99%", title: "Moving a luxury hotel from PBX to VoIP", org: "The Mark Hotel", when: "2023 – 2024", tag: "Migration",
     summary: "500 users migrated from a legacy PBX to NEC VoIP with 99.99% call availability after the transition.",
     problem: "A legacy PBX phone system had to be replaced in an operation where phones can't go down.",
     role: "System Analyst on the migration.",
@@ -133,7 +133,7 @@ export const studies: CaseStudy[] = [
     flow: { nodes: ["Legacy PBX", "Risk and dependency mapping", "Phased cutover", "NEC VoIP"], caption: "Simplified migration path." },
   },
   {
-    slug: "active-directory-security", title: "Tightening Active Directory security", org: "The Mark Hotel", when: "2023 – 2024", tag: "Identity and security",
+    slug: "active-directory-security", stat: "95% fewer incidents", title: "Tightening Active Directory security", org: "The Mark Hotel", when: "2023 – 2024", tag: "Identity and security",
     summary: "Active Directory security policies for 300+ users cut unauthorized access incidents by 95%.",
     problem: "Access control across 300+ users needed to be enforced consistently.",
     role: "System Analyst responsible for Active Directory and the Windows Server environment.",
@@ -143,7 +143,7 @@ export const studies: CaseStudy[] = [
     flow: { nodes: ["Users and groups", "AD security policies", "Windows Server (10+ physical, 20+ VMs)", "Microsoft 365 access"], caption: "Simplified identity flow." },
   },
   {
-    slug: "network-reliability", title: "Finding the bottlenecks behind network outages", org: "Penn Medicine University Hospital", when: "2021 – 2022", tag: "Networking",
+    slug: "network-reliability", stat: "25% fewer outages", title: "Finding the bottlenecks behind network outages", org: "Penn Medicine University Hospital", when: "2021 – 2022", tag: "Networking",
     summary: "Packet analysis and DNS/DHCP troubleshooting lowered network outages and monthly downtime incidents by 25% each.",
     problem: "A university hospital environment with 5,000+ users was seeing network outages and recurring downtime incidents.",
     role: "Senior IT Support Specialist.",
@@ -153,7 +153,7 @@ export const studies: CaseStudy[] = [
     flow: { nodes: ["Outage reports", "Packet capture and analysis", "Root cause (bottleneck, DNS/DHCP)", "Fix and verify"], caption: "The troubleshooting loop." },
   },
   {
-    slug: "l3-escalations", title: "Fast L3 escalations at a bank", org: "Santander Bank", when: "2022 – 2023", tag: "IT operations",
+    slug: "l3-escalations", stat: "92% in 3 hours", title: "Fast L3 escalations at a bank", org: "Santander Bank", when: "2022 – 2023", tag: "IT operations",
     summary: "92% of L3 escalations closed within 3 hours, improving productivity 20%.",
     problem: "Banking staff need complex escalations resolved quickly to keep working.",
     role: "Senior IT Support Specialist handling L3 escalations and network administration.",
