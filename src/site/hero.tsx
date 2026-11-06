@@ -6,8 +6,8 @@ import { profile } from "./data";
 import { A } from "./parts";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
-const INK = "oklch(0.2 0.02 45)";
-const PAPER = "oklch(0.985 0.005 80)";
+const INK = "#2f3020";
+const PAPER = "#f4f3f7";
 
 function Box({ x, y, w, h, label, sub, fill, stroke, text = PAPER }: { x: number; y: number; w: number; h: number; label: string; sub?: string; fill: string; stroke?: string; text?: string }) {
   return (
@@ -27,11 +27,11 @@ function Box({ x, y, w, h, label, sub, fill, stroke, text = PAPER }: { x: number
 
 /** Before: everything on one flat network. Illustrative, not any employer's real network. */
 function BeforeNet() {
-  const grey = "oklch(0.42 0.012 60)";
+  const grey = "#6d6e5c";
   const devices = ["Staff PCs", "Printers", "Phones", "Guest Wi-Fi", "Cameras", "Servers"];
   return (
     <svg viewBox="0 0 1200 640" className="h-full w-full" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Before: one flat network where staff, guests, phones, printers and servers all share the same network">
-      <rect width="1200" height="640" fill="oklch(0.3 0.012 55)" />
+      <rect width="1200" height="640" fill="#3a3b2e" />
       <Box x={520} y={40} w={160} h={64} label="Internet" fill={grey} />
       <line x1={600} y1={104} x2={600} y2={160} stroke={grey} strokeWidth={4} />
       <Box x={500} y={160} w={200} h={64} label="Basic router" fill={grey} />
@@ -45,7 +45,7 @@ function BeforeNet() {
         return (
           <g key={d}>
             <line x1={600} y1={280} x2={x + 65} y2={380} stroke={grey} strokeWidth={2} opacity={0.8} />
-            <Box x={x} y={380} w={130} h={64} label={d} fill="oklch(0.36 0.012 55)" stroke={grey} />
+            <Box x={x} y={380} w={130} h={64} label={d} fill="#45463a" stroke={grey} />
           </g>
         );
       })}
@@ -58,21 +58,21 @@ function BeforeNet() {
 
 /** After: firewall, VLAN segmentation and site-to-site VPN to branches. Illustrative. */
 function AfterNet() {
-  const clay = "oklch(0.58 0.12 40)";
+  const clay = "#d96846";
   const vlans = [
-    { l: "Staff", c: "oklch(0.55 0.1 160)" },
-    { l: "Voice", c: "oklch(0.58 0.12 40)" },
-    { l: "Printers", c: "oklch(0.6 0.09 75)" },
-    { l: "Guest Wi-Fi", c: "oklch(0.5 0.08 250)" },
+    { l: "Staff", c: "#596235" },
+    { l: "Voice", c: "#d96846" },
+    { l: "Printers", c: "#7d7a92" },
+    { l: "Guest Wi-Fi", c: "#8a8f4e" },
   ];
   return (
     <svg viewBox="0 0 1200 640" className="h-full w-full" preserveAspectRatio="xMidYMid meet" role="img" aria-label="After: a firewall with VLAN-segmented staff, voice, printer and guest networks, connected to branch offices over site-to-site VPN">
-      <rect width="1200" height="640" fill="oklch(0.24 0.02 45)" />
-      <Box x={520} y={40} w={160} h={64} label="Internet" fill="oklch(0.36 0.02 45)" />
+      <rect width="1200" height="640" fill="#2f3020" />
+      <Box x={520} y={40} w={160} h={64} label="Internet" fill="#45473a" />
       <line x1={600} y1={104} x2={600} y2={150} stroke={PAPER} strokeWidth={4} opacity={0.6} />
       <Box x={480} y={150} w={240} h={76} label="Firewall" sub="policy · VPN" fill={clay} />
       <line x1={600} y1={226} x2={600} y2={276} stroke={PAPER} strokeWidth={4} opacity={0.6} />
-      <Box x={480} y={276} w={240} h={70} label="Core switch" sub="VLAN trunk" fill="oklch(0.36 0.02 45)" />
+      <Box x={480} y={276} w={240} h={70} label="Core switch" sub="VLAN trunk" fill="#45473a" />
       {vlans.map((v, i) => {
         const x = 300 + i * 160;
         return (
@@ -91,7 +91,7 @@ function AfterNet() {
       ].map((b) => (
         <g key={b.l}>
           <path d={b.x < 600 ? `M 200 192 C 330 192, 380 188, 480 188` : `M 1000 192 C 880 192, 820 188, 720 188`} stroke={clay} strokeWidth={4} strokeDasharray="12 9" fill="none" />
-          <Box x={b.x} y={b.y} w={160} h={64} label={b.l} sub="site-to-site VPN" fill="oklch(0.36 0.02 45)" stroke={clay} />
+          <Box x={b.x} y={b.y} w={160} h={64} label={b.l} sub="site-to-site VPN" fill="#45473a" stroke={clay} />
         </g>
       ))}
     </svg>
@@ -169,12 +169,12 @@ export function NetworkHero() {
           onPointerUp={() => (dragging.current = false)}
           onPointerCancel={() => (dragging.current = false)}
           className={`absolute inset-x-3 top-20 bottom-4 overflow-hidden rounded-[2rem] shadow-lg select-none sm:inset-x-5 lg:inset-x-8 lg:bottom-6 ${interactive ? "cursor-ew-resize touch-pan-y" : ""}`}
-          style={{ background: "oklch(0.3 0.012 55)" }}
+          style={{ background: "#3a3b2e" }}
         >
           <div className="absolute inset-x-2 top-14 h-[36%] sm:top-12 sm:h-[50%] lg:inset-y-0 lg:top-0 lg:right-4 lg:left-[44%] lg:h-full lg:py-20">
             <BeforeNet />
           </div>
-          <motion.div style={{ clipPath: clip, background: "oklch(0.24 0.02 45)" }} className="absolute inset-0">
+          <motion.div style={{ clipPath: clip, background: "#2f3020" }} className="absolute inset-0">
             <div className="absolute inset-x-2 top-14 h-[36%] sm:top-12 sm:h-[50%] lg:inset-y-0 lg:top-0 lg:right-4 lg:left-[44%] lg:h-full lg:py-20">
               <AfterNet />
             </div>
@@ -204,14 +204,14 @@ export function NetworkHero() {
           <motion.span style={{ opacity: afterLabel }} className="absolute top-5 right-5 rounded-full bg-background/85 px-3 py-1 font-mono text-[11px] tracking-[0.18em] text-foreground uppercase backdrop-blur">
             After
           </motion.span>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[oklch(0.2_0.02_45/0.95)] via-[oklch(0.2_0.02_45/0.7)] to-transparent px-6 pt-16 pb-7 sm:px-10 sm:pb-10 lg:inset-y-0 lg:right-auto lg:flex lg:w-[50%] lg:flex-col lg:justify-end lg:bg-gradient-to-r lg:pt-24 lg:pr-4 lg:pb-14 lg:pl-12">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#2f3020f2] via-[#2f3020b3] to-transparent px-6 pt-16 pb-7 sm:px-10 sm:pb-10 lg:inset-y-0 lg:right-auto lg:flex lg:w-[50%] lg:flex-col lg:justify-end lg:bg-gradient-to-r lg:pt-24 lg:pr-4 lg:pb-14 lg:pl-12">
             <motion.p {...intro(0.1)} className="inline-flex items-center gap-2 self-start rounded-full bg-background/90 px-3 py-1 font-mono text-[11px] tracking-[0.14em] text-foreground uppercase">
               <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden /> {profile.status}
             </motion.p>
             <motion.h1 {...intro(0.15)} className="mt-4 max-w-3xl text-[2.1rem] leading-[1.04] font-semibold tracking-tight text-balance sm:text-6xl lg:text-[4.2rem]" style={{ color: PAPER }}>
               Multisite networks, kept secure and running.
             </motion.h1>
-            <motion.p {...intro(0.3)} className="mt-4 max-w-2xl text-base sm:text-lg" style={{ color: "oklch(0.92 0.01 75)" }}>
+            <motion.p {...intro(0.3)} className="mt-4 max-w-2xl text-base sm:text-lg" style={{ color: "#dedde5" }}>
               {profile.name} · {profile.title}, New York. 7+ years across healthcare, banking, hospitality and an enterprise server data center.
             </motion.p>
             <motion.div {...intro(0.4)} className="no-print pointer-events-auto mt-6 flex flex-wrap items-center gap-3">
@@ -227,7 +227,7 @@ export function NetworkHero() {
                 </button>
               ) : null}
             </motion.div>
-            <p className="mt-4 font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: "oklch(0.85 0.01 75 / 0.8)" }}>
+            <p className="mt-4 font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: "#cdcbd6cc" }}>
               Illustration · not a real employer network
             </p>
           </div>
