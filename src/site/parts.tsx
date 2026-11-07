@@ -78,6 +78,7 @@ function ThemeButton() {
 
 const NAV = [
   { to: "/#work", label: "Work" },
+  { to: "/#on-site", label: "On site" },
   { to: "/#process", label: "Process" },
   { to: "/#experience", label: "Experience" },
   { to: "/#skills", label: "Skills" },

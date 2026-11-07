@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { education, jobs, metrics, profile, skills, studies, tracks, type CaseStudy, type TrackSlug } from "./data";
+import { FieldWork } from "./field";
 import { NetworkHero } from "./hero";
 import { A, FlowDiagram, LinkedInIcon, Reveal, Section } from "./parts";
 import { visitCode } from "./track";
@@ -358,6 +359,7 @@ export function Home({ trackSlug }: { trackSlug?: TrackSlug }) {
       <NetworkHero />
       <Results />
       <Work list={list} track={track} />
+      <FieldWork />
       <Process />
       <Experience />
       <Skills focus={track?.focus} />
