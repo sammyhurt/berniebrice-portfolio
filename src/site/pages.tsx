@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { education, jobs, metrics, profile, skills, studies, tracks, type CaseStudy, type TrackSlug } from "./data";
+import { ScreenDemos, StudyDemos } from "./demos";
 import { FieldWork, StudyMedia } from "./field";
 import { NetworkHero } from "./hero";
 import { A, FlowDiagram, LinkedInIcon, Reveal, Section } from "./parts";
@@ -406,6 +407,7 @@ export function Home({ trackSlug }: { trackSlug?: TrackSlug }) {
       <Results />
       <Work list={list} track={track} />
       <FieldWork />
+      <ScreenDemos />
       <Experience />
       <Skills focus={track?.focus} />
       <Credentials />
@@ -503,6 +505,7 @@ export function StudyPage({ slug }: { slug: string }) {
             </Reveal>
           ) : null}
         </div>
+        <StudyDemos slug={s.slug} />
         {s.media ? <StudyMedia /> : null}
         <div className="no-print mt-10 flex flex-wrap items-center justify-between gap-3">
           <A to="/#contact" className={cn(pill, "bg-primary text-primary-foreground shadow-md")}>
