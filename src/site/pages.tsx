@@ -257,7 +257,7 @@ function About() {
           <dl className="mt-10 grid max-w-2xl gap-6 sm:grid-cols-2">
             <div>
               <dt className={label}>Looking for</dt>
-              <dd className="mt-2 leading-relaxed">{tracks.map((t) => t.label).join(", ")} roles</dd>
+              <dd className="mt-2 leading-relaxed">{[...tracks.map((t) => t.label), "AI Engineer"].join(", ")} or AI Implementation Specialist roles</dd>
             </div>
             <div>
               <dt className={label}>Work setup</dt>
