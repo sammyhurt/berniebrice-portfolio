@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download, Phone } from "lucide-react";
 import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
@@ -7,13 +7,37 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 import { education, jobs, metrics, profile, skills, studies, tracks, type CaseStudy, type TrackSlug } from "./data";
-import { FieldWork } from "./field";
+import { FieldWork, StudyMedia } from "./field";
 import { NetworkHero } from "./hero";
 import { A, FlowDiagram, LinkedInIcon, Reveal, Section } from "./parts";
 import { visitCode } from "./track";
 
 const bySlug = (s: string) => studies.find((x) => x.slug === s);
 const pill = "inline-flex h-12 items-center gap-2 rounded-full px-6 text-sm font-semibold transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]";
+
+/** The five things a recruiter checks first. */
+function Facts() {
+  const items = [
+    { k: "Now", v: profile.current.title, sub: profile.current.org },
+    { k: "Experience", v: "7+ years", sub: "Healthcare, banking, hospitality, data center" },
+    { k: "Certified", v: "CompTIA Security+" },
+    { k: "Based in", v: profile.location },
+    { k: "Open to", v: profile.availability, sub: "Infrastructure · Systems · Network · Endpoint · IT Ops roles" },
+  ];
+  return (
+    <section aria-label="At a glance" className="px-5 pt-6 sm:px-8 lg:px-11">
+      <dl className="bg-card grid gap-px overflow-hidden rounded-[1.75rem] shadow-sm sm:grid-cols-2 lg:grid-cols-5">
+        {items.map((it) => (
+          <div key={it.k} className="bg-card p-5 sm:p-6">
+            <dt className="text-primary font-mono text-[11px] tracking-[0.16em] uppercase">{it.k}</dt>
+            <dd className="mt-2 text-lg leading-snug font-semibold tracking-tight">{it.v}</dd>
+            {it.sub ? <dd className="text-muted-foreground mt-1 text-sm leading-snug">{it.sub}</dd> : null}
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
 
 function Results() {
   return (
@@ -39,9 +63,9 @@ function Results() {
   );
 }
 
-/* bento spans for up to 8 cards, following the template's grid */
-const SPANS = ["md:col-span-3 md:row-span-2", "md:col-span-3", "md:col-span-3", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-3", "md:col-span-3"];
-const TINTS = ["bg-primary text-primary-foreground", "bg-card", "bg-accent", "bg-card", "bg-secondary", "bg-card", "bg-secondary", "bg-card"];
+/* bento spans for up to 9 cards, following the template's grid */
+const SPANS = ["md:col-span-3 md:row-span-2", "md:col-span-3", "md:col-span-3", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-2"];
+const TINTS = ["bg-primary text-primary-foreground", "bg-card", "bg-accent", "bg-card", "bg-secondary", "bg-card", "bg-secondary", "bg-card", "bg-accent"];
 
 function Work({ list, track }: { list: CaseStudy[]; track?: (typeof tracks)[number] }) {
   return (
@@ -98,32 +122,6 @@ const STEPS = [
   { n: "03", title: "Build", body: "Onsite execution: firewalls, site-to-site VPNs, switching, VLANs, endpoints and printers, then post-move support." },
   { n: "04", title: "Document", body: "Equipment layouts, site blueprints and runbooks that cut troubleshooting time and make the next project easier." },
 ];
-function Process() {
-  return (
-    <section id="process" className="bg-secondary scroll-mt-20 px-5 py-20 sm:px-8 lg:px-11 lg:py-28">
-      <Reveal className="mb-16 max-w-2xl">
-        <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">How I work</p>
-        <h2 className="mt-3 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Four steps, documented, no surprises.</h2>
-      </Reveal>
-      <ol className="relative grid gap-12 md:grid-cols-4 md:gap-8">
-        {STEPS.map((s, i) => (
-          <Reveal key={s.n} delay={i * 0.1} className="relative">
-            {i < STEPS.length - 1 ? <span aria-hidden className="bg-foreground/25 absolute top-5 left-14 hidden h-px w-[calc(100%-3rem)] md:block" /> : null}
-            {i < STEPS.length - 1 ? <span aria-hidden className="bg-foreground/25 absolute top-12 left-5 h-[calc(100%-2rem)] w-px md:hidden" /> : null}
-            <li className="flex gap-5 md:block">
-              <span className="border-foreground/30 bg-secondary text-foreground flex h-10 w-10 shrink-0 items-center justify-center rounded-full border font-mono text-sm">{s.n}</span>
-              <div className="md:mt-6">
-                <h3 className="text-xl font-semibold tracking-tight">{s.title}</h3>
-                <p className="text-muted-foreground mt-2 max-w-xs">{s.body}</p>
-              </div>
-            </li>
-          </Reveal>
-        ))}
-      </ol>
-    </section>
-  );
-}
-
 function Experience() {
   const [open, setOpen] = useState<string | null>(jobs[0].org);
   return (
@@ -172,7 +170,7 @@ function Experience() {
 function Skills({ focus }: { focus?: readonly string[] }) {
   const groups = focus ? [...skills].sort((a, b) => (focus.includes(b.name) ? 1 : 0) - (focus.includes(a.name) ? 1 : 0)) : skills;
   return (
-    <Section id="skills" eyebrow="Skills" title="What I work with" lead="Skills with an arrow link to a case study that shows them in practice." className="bg-secondary">
+    <Section id="skills" eyebrow="Skills" title="What I work with" lead="Orange tags link to a case study that shows the skill in practice. Gray tags are skills I use that don't have a write-up yet." className="bg-secondary">
       <div className="grid gap-4 md:grid-cols-2">
         {groups.map((g, i) => (
           <Reveal key={g.name} delay={(i % 2) * 0.06}>
@@ -203,7 +201,7 @@ function Credentials() {
   const card = "bg-card h-full rounded-[1.75rem] p-6 shadow-sm";
   const label = "text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase";
   return (
-    <Section id="credentials" eyebrow="Credentials" title="Certified, trained, educated">
+    <Section id="credentials" eyebrow="Credentials" title="Certified, trained, educated" className="bg-secondary pt-0 lg:pt-0">
       <div className="grid gap-4 md:grid-cols-3">
         <Reveal>
           <div className={card}>
@@ -241,6 +239,45 @@ function Credentials() {
   );
 }
 
+function About() {
+  const label = "text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase";
+  return (
+    <section id="about" className="scroll-mt-20 px-5 py-20 sm:px-8 lg:px-11 lg:py-28">
+      <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+        <Reveal className="lg:col-span-5">
+          <div className="bg-secondary relative mx-auto max-w-md overflow-hidden rounded-[2rem] shadow-sm">
+            <img src={profile.headshot} alt={`${profile.name}, ${profile.title}`} width={900} height={1125} loading="lazy" decoding="async" className="aspect-[4/5] h-auto w-full object-cover object-top" />
+            <span aria-hidden className="bg-primary absolute inset-y-0 left-0 w-2" />
+          </div>
+        </Reveal>
+        <Reveal delay={0.08} className="lg:col-span-7">
+          <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">About</p>
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Hi, I'm Bernie.</h2>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed">{profile.about}</p>
+          <dl className="mt-10 grid max-w-2xl gap-6 sm:grid-cols-2">
+            <div>
+              <dt className={label}>Looking for</dt>
+              <dd className="mt-2 leading-relaxed">{tracks.map((t) => t.label).join(", ")} roles</dd>
+            </div>
+            <div>
+              <dt className={label}>Work setup</dt>
+              <dd className="mt-2 leading-relaxed">{profile.availability}, based in {profile.location}</dd>
+            </div>
+          </dl>
+          <div className="no-print mt-10 flex flex-wrap gap-3">
+            <a href={profile.resumePdf} download className={cn(pill, "bg-primary text-primary-foreground shadow-md")}>
+              <Download className="size-4" /> Download resume
+            </a>
+            <a href={profile.linkedin} target="_blank" rel="noreferrer" className={cn(pill, "bg-muted hover:bg-secondary")}>
+              <LinkedInIcon /> LinkedIn
+            </a>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 const field = "h-12 rounded-xl border-border bg-card px-4 text-base shadow-none";
 function Contact() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -262,13 +299,21 @@ function Contact() {
         <Reveal className="lg:col-span-2">
           <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">Contact</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Let's talk about the role.</h2>
-          <p className="text-muted-foreground mt-5 max-w-md">Hiring for infrastructure, systems, network, endpoint or IT operations engineering? A few lines is plenty. I reply by email.</p>
+          <p className="text-muted-foreground mt-5 max-w-md">Hiring for infrastructure, systems, network, endpoint or IT operations engineering? A few lines is plenty, or call me.</p>
           <dl className="mt-10 grid gap-4 text-sm">
             <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
               <dt className="text-muted-foreground">Email</dt>
               <dd>
                 <a href={`mailto:${profile.email}`} className="underline-offset-4 hover:underline">
                   {profile.email}
+                </a>
+              </dd>
+            </div>
+            <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
+              <dt className="text-muted-foreground">Phone</dt>
+              <dd>
+                <a href={profile.phoneHref} className="inline-flex items-center gap-1.5 tabular-nums underline-offset-4 hover:underline">
+                  <Phone className="size-3.5" aria-hidden /> {profile.phone}
                 </a>
               </dd>
             </div>
@@ -357,13 +402,14 @@ export function Home({ trackSlug }: { trackSlug?: TrackSlug }) {
   return (
     <main>
       <NetworkHero />
+      <Facts />
       <Results />
       <Work list={list} track={track} />
       <FieldWork />
-      <Process />
       <Experience />
       <Skills focus={track?.focus} />
       <Credentials />
+      <About />
       <Contact />
     </main>
   );
@@ -436,6 +482,20 @@ export function StudyPage({ slug }: { slug: string }) {
               ))}
             </ul>
           </Reveal>
+          {s.approach ? (
+            <Reveal className={block}>
+              <h2 className={label}>How I approach it</h2>
+              <ol className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {STEPS.map((st) => (
+                  <li key={st.n}>
+                    <span className="border-foreground/30 text-foreground flex size-9 items-center justify-center rounded-full border font-mono text-xs">{st.n}</span>
+                    <p className="mt-3 font-semibold">{st.title}</p>
+                    <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{st.body}</p>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          ) : null}
           {s.next ? (
             <Reveal className={block}>
               <h2 className={label}>What's next</h2>
@@ -443,6 +503,7 @@ export function StudyPage({ slug }: { slug: string }) {
             </Reveal>
           ) : null}
         </div>
+        {s.media ? <StudyMedia /> : null}
         <div className="no-print mt-10 flex flex-wrap items-center justify-between gap-3">
           <A to="/#contact" className={cn(pill, "bg-primary text-primary-foreground shadow-md")}>
             Talk to me about this

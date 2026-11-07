@@ -183,3 +183,18 @@ html { scroll-behavior: smooth; }
   .no-print { display: none !important; }
   body { background: #fff !important; color: #000 !important; }
 }
+
+/* Short phones (iPhone SE and similar): give the hero text more room */
+@media (max-width: 639px) and (max-height: 720px) {
+  .hero-diagram { height: 21% !important; }
+  .hero-divider { height: calc(3rem + 21%) !important; }
+  .hero-hint { top: calc(3rem + 21%) !important; }
+  .hero-h1 { font-size: 1.6rem !important; }
+}
+@media (max-width: 639px) and (max-height: 620px) {
+  .hero-diagram { height: 15% !important; }
+  .hero-divider { height: calc(3rem + 15%) !important; }
+  .hero-hint { top: calc(3rem + 15%) !important; }
+  .hero-h1 { font-size: 1.45rem !important; }
+  .hero-second { display: none !important; }
+}

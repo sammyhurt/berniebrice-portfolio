@@ -79,9 +79,9 @@ function ThemeButton() {
 const NAV = [
   { to: "/#work", label: "Work" },
   { to: "/#on-site", label: "On site" },
-  { to: "/#process", label: "Process" },
   { to: "/#experience", label: "Experience" },
   { to: "/#skills", label: "Skills" },
+  { to: "/#about", label: "About" },
   { to: "/resume", label: "Resume" },
 ];
 
@@ -120,6 +120,9 @@ export function Footer() {
         </span>
         <a className="hover:text-foreground" href={`mailto:${profile.email}`}>
           {profile.email}
+        </a>
+        <a className="hover:text-foreground tabular-nums" href={profile.phoneHref}>
+          {profile.phone}
         </a>
         <a className="hover:text-foreground inline-flex items-center gap-1.5" href={profile.linkedin} target="_blank" rel="noreferrer">
           <LinkedInIcon /> LinkedIn

@@ -1,5 +1,5 @@
 /**
- * Every fact on this site comes from Bernie's resume (October 2026). Nothing here is estimated or invented.
+ * Every fact on this site comes from Bernie's resume (October 2026) or was confirmed by Bernie. Nothing here is estimated or invented.
  * To add details (team size, site counts, results), edit this file only.
  */
 export const profile = {
@@ -10,12 +10,17 @@ export const profile = {
   email: "bricebernie@gmail.com",
   linkedin: "https://www.linkedin.com/in/bernie-brice-82491098",
   resumePdf: "/Bernie-Brice-Resume.pdf",
-  headshot: "", // add /headshot.jpg to public/ and put its path here
+  phone: "(908) 590-2955",
+  phoneHref: "tel:+19085902955",
+  headshot: "/headshot.jpg",
   status: "Open to new roles",
   pitch: "I keep multisite networks, identity and infrastructure running, and I automate the work around them.",
   summary:
     "IT Infrastructure Engineer with 7+ years supporting enterprise technology across healthcare, banking and hospitality. I serve as the primary internal onsite IT resource for a multisite healthcare organization: SonicWall firewalls, site-to-site VPNs, UniFi/Cisco switching, Ubiquiti wireless, VLAN segmentation, branch relocations, vendor escalations and critical incident response.",
-  availability: "New York–area hybrid or onsite roles, and fully remote roles.",
+  availability: "Onsite, hybrid or remote",
+  current: { title: "Senior IT Infrastructure Engineer", org: "Marks Home Care Agency" },
+  about:
+    "I'm a Senior IT Infrastructure Engineer in New York. For 7+ years I've kept the technology behind healthcare, banking, hospitality and data center teams running, from racking and patching branch networks to securing Active Directory and closing escalations fast. Today I'm the internal infrastructure owner for a multi-branch healthcare organization. Outside work, I run a home lab where I test automation, backups and clustering.",
 };
 
 export interface Metric { value: string; label: string; source: string; study: string }
@@ -88,10 +93,11 @@ export interface Flow { nodes: string[]; caption: string }
 export interface CaseStudy {
   slug: string; title: string; org: string; when: string; tag: string; summary: string;
   problem: string; role: string; did: string[]; stat?: string; stack: string[]; results: string[]; flow: Flow; next?: string; status?: string;
+  /** show the Assess / Plan / Build / Document approach */ approach?: boolean; /** show the on-site clips and photos */ media?: boolean;
 }
 export const studies: CaseStudy[] = [
   {
-    slug: "multisite-healthcare-network", title: "Owning a multisite healthcare network", org: "Marks Home Care Agency", when: "2024 – Present", tag: "Networking",
+    slug: "multisite-healthcare-network", title: "Owning a multisite healthcare network", org: "Marks Home Care Agency", when: "2024 – Present", tag: "Networking", approach: true, media: true,
     summary: "Sole internal IT resource keeping a distributed healthcare organization connected: firewalls, site-to-site VPNs, switching, wireless and VLAN segmentation.",
     problem: "A home care agency with multiple branch locations needs every site connected, secure and supported in person. Its third-party MSP works remotely and can't handle physical issues, onsite escalations or site-specific troubleshooting.",
     role: "Primary internal IT infrastructure owner and the only internal onsite IT resource, working alongside the company's MSP.",
@@ -107,7 +113,7 @@ export const studies: CaseStudy[] = [
     flow: { nodes: ["Main office", "SonicWall", "Site-to-site VPN", "Branch SonicWall", "VLAN-segmented branch LAN"], caption: "Simplified and generalized. No real addresses or site details are shown." },
   },
   {
-    slug: "branch-relocations", title: "Branch relocations and buildouts", org: "Marks Home Care Agency", when: "2024 – Present", tag: "Infrastructure delivery",
+    slug: "branch-relocations", title: "Branch relocations and buildouts", org: "Marks Home Care Agency", when: "2024 – Present", tag: "Infrastructure delivery", approach: true, media: true,
     summary: "Onsite technology readiness for branch moves and new offices, from network prep to the first day of work.",
     problem: "When a branch moves or a new office opens, the network, workstations and printers must be ready on day one, with no gap in patient-facing operations.",
     role: "Lead onsite infrastructure execution for every move and buildout.",
@@ -183,6 +189,21 @@ export const studies: CaseStudy[] = [
     next: "Automated cluster builds across the lab hosts as the environment expands.",
     flow: { nodes: ["Workstations", "UniFi switch", "Synology NAS", "Hyper Backup", "AWS S3"], caption: "Backup path. Lab addresses are not shown." },
   },
+  {
+    slug: "automation-platform", title: "Automation platform for a midterm rental platform", org: "Independent project", when: "2026", tag: "Automation",
+    summary: "n8n workflows, secured webhook APIs and a React dashboard that draft, check and report on content, with a person approving everything before it goes out.",
+    problem: "A pre-launch midterm rental platform needed its content, scheduling and reporting work automated, without anything publishing unreviewed.",
+    role: "Designed and built it, using AI-assisted development.",
+    did: [
+      "Designed and built n8n workflows behind a content and operations dashboard, with webhook APIs secured by header authentication and backed by n8n data tables",
+      "Connected the Facebook and Instagram Graph APIs for page and performance data",
+      "Added AI writing steps with hard rule checks (fair housing, claims) and required human approval before anything publishes",
+      "Built the dashboard in React and TypeScript, deployed from GitHub to Netlify",
+    ],
+    stack: ["n8n", "Webhooks / header auth", "n8n data tables", "Facebook & Instagram Graph API", "LLM APIs", "React", "TypeScript", "GitHub", "Netlify"],
+    results: ["Nothing publishes without human approval", "Rule checks run on every AI draft before review"],
+    flow: { nodes: ["Dashboard (React)", "Webhook API (header auth)", "n8n workflows", "AI draft + rule checks", "Human approval"], caption: "Simplified. No company, account or credential details are shown." },
+  },
 ];
 
 export interface SkillGroup { name: string; items: { skill: string; studies?: string[] }[] }
@@ -207,7 +228,7 @@ export const skills: SkillGroup[] = [
     { skill: "CompTIA Security+" }, { skill: "Firewall policy support", studies: ["multisite-healthcare-network"] }, { skill: "Vulnerability management" }, { skill: "Access control", studies: ["active-directory-security"] },
     { skill: "Incident triage", studies: ["network-reliability"] }, { skill: "Disaster recovery planning", studies: ["home-lab"] }, { skill: "Operational risk reduction", studies: ["pbx-to-voip"] } ] },
   { name: "Automation and cloud", items: [
-    { skill: "PowerShell / Python scripting" }, { skill: "n8n automation", studies: ["home-lab"] }, { skill: "Docker", studies: ["home-lab"] }, { skill: "AWS S3", studies: ["home-lab"] }, { skill: "Synology Hyper Backup", studies: ["home-lab"] } ] },
+    { skill: "PowerShell / Python scripting" }, { skill: "n8n automation", studies: ["automation-platform", "home-lab"] }, { skill: "Webhooks / REST APIs", studies: ["automation-platform"] }, { skill: "React / TypeScript", studies: ["automation-platform"] }, { skill: "Docker", studies: ["home-lab"] }, { skill: "AWS S3", studies: ["home-lab"] }, { skill: "Synology Hyper Backup", studies: ["home-lab"] } ] },
 ];
 
 export const education = {

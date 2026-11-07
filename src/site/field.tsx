@@ -12,6 +12,7 @@ import { Reveal, Section } from "./parts";
 type Clip = { slug: string; title: string; caption: string };
 const CLIPS: Clip[] = [
   { slug: "finished-rack", title: "Finished rack", caption: "Patch panels, switching, NVR and power, labeled and dressed." },
+  { slug: "repatch", title: "Re-patching a busy rack", caption: "Tracing, re-patching and dressing cables in a crowded rack." },
   { slug: "patch-panel", title: "Patch panel install", caption: "Mounting and patching 24-port panels in a wall rack." },
   { slug: "wall-rack", title: "Wall rack build", caption: "Mounting gear and managing cable runs in a wall-mounted rack." },
   { slug: "firewall", title: "Firewall setup", caption: "Registering and configuring a SonicWall TZ470 from a laptop." },
@@ -143,7 +144,7 @@ function Viewer({ item, onClose, onStep }: { item: Item; onClose: () => void; on
   );
 }
 
-export function FieldWork() {
+function useViewer() {
   const [item, setItem] = useState<Item | null>(null);
   const close = useCallback(() => setItem(null), []);
   const step = useCallback(
@@ -155,11 +156,23 @@ export function FieldWork() {
       }),
     [],
   );
+  return { item, setItem, viewer: item ? <Viewer item={item} onClose={close} onStep={step} /> : null };
+}
 
+/** Clips and photos. "home" lays the phones out in a row on desktop; "study" keeps a swipeable strip inside the narrower case study column. */
+function FieldMedia({ variant }: { variant: "home" | "study" }) {
+  const { setItem, viewer } = useViewer();
+  const home = variant === "home";
   return (
-    <Section id="on-site" eyebrow="On the job" title="Watch me work" lead="Rack builds, patching and firewall setup, filmed on site. Clips are silent. Device labels and third-party signage are blurred." className="overflow-hidden">
+    <>
       <Reveal>
-        <div className="-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: "none" }}>
+        <div
+          className={cn(
+            "-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8 [&::-webkit-scrollbar]:hidden",
+            home ? "lg:mx-0 lg:grid lg:grid-cols-6 lg:gap-5 lg:overflow-visible lg:px-0 lg:pb-0" : "lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0",
+          )}
+          style={{ scrollbarWidth: "none" }}
+        >
           {CLIPS.map((c, i) => (
             <PhoneClip key={c.slug} clip={c} onOpen={() => setItem({ kind: "clip", i })} />
           ))}
@@ -167,12 +180,12 @@ export function FieldWork() {
         <p className="text-muted-foreground mt-2 font-mono text-[11px] tracking-[0.14em] uppercase lg:hidden">Swipe for more · tap to play</p>
       </Reveal>
 
-      <Reveal className="mt-20">
+      <Reveal className={home ? "mt-20" : "mt-10"}>
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <h3 className="text-2xl font-semibold tracking-tight">Rack builds</h3>
+          <h3 className={cn("font-semibold tracking-tight", home ? "text-2xl" : "text-xl")}>Rack builds</h3>
           <p className="text-muted-foreground text-sm">Tap a photo to view it larger.</p>
         </div>
-        <ul className="columns-2 gap-4 md:columns-3 lg:columns-4">
+        <ul className={cn("columns-2 gap-4", home ? "md:columns-3 lg:columns-4" : "md:columns-3")}>
           {PHOTOS.map((p, i) => (
             <li key={p.slug} className="mb-4 break-inside-avoid">
               <button type="button" onClick={() => setItem({ kind: "photo", i })} className="group bg-card block w-full overflow-hidden rounded-[1.25rem] shadow-sm" aria-label={`View photo: ${p.alt}`}>
@@ -182,9 +195,32 @@ export function FieldWork() {
           ))}
         </ul>
       </Reveal>
+      {viewer}
+    </>
+  );
+}
 
-      {item ? <Viewer item={item} onClose={close} onStep={step} /> : null}
+export function FieldWork() {
+  return (
+    <Section
+      id="on-site"
+      eyebrow="On the job · Marks branch work"
+      title="Watch me work"
+      lead="Rack builds, patching and firewall setup from branch work at Marks Home Care Agency. Clips are silent. Device labels and third-party signage are blurred."
+      className="overflow-hidden"
+    >
+      <FieldMedia variant="home" />
     </Section>
   );
 }
 
+/** The same media on the Marks case study pages. */
+export function StudyMedia() {
+  return (
+    <section aria-label="From the job" className="mt-14">
+      <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">From the job · Marks branch work</p>
+      <h2 className="mt-3 mb-8 text-3xl font-semibold tracking-tight">Rack builds and installs</h2>
+      <FieldMedia variant="study" />
+    </section>
+  );
+}

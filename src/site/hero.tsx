@@ -154,7 +154,7 @@ export function NetworkHero() {
   const interactive = unlocked || reduced;
   const intro = (delay: number) => (reduced ? {} : { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] as const } });
   return (
-    <section ref={sectionRef} id="top" className={reduced ? "relative h-dvh" : "relative h-[240vh]"} aria-label="Before and after: a flat network becomes a segmented multisite network">
+    <section ref={sectionRef} id="top" className={reduced ? "relative h-dvh" : "relative h-[185vh]"} aria-label="Before and after: a flat network becomes a segmented multisite network">
       <div className="sticky top-0 h-dvh">
         <motion.div
           {...intro(0)}
@@ -171,15 +171,15 @@ export function NetworkHero() {
           className={`absolute inset-x-3 top-20 bottom-4 overflow-hidden rounded-[2rem] shadow-lg select-none sm:inset-x-5 lg:inset-x-8 lg:bottom-6 ${interactive ? "cursor-ew-resize touch-pan-y" : ""}`}
           style={{ background: "#3a3b2e" }}
         >
-          <div className="absolute inset-x-2 top-14 h-[36%] sm:top-12 sm:h-[50%] lg:inset-y-0 lg:top-0 lg:right-4 lg:left-[44%] lg:h-full lg:py-20">
+          <div className="hero-diagram absolute inset-x-2 top-12 h-[30%] sm:h-[44%] lg:inset-y-0 lg:top-0 lg:right-4 lg:left-[44%] lg:h-full lg:py-20">
             <BeforeNet />
           </div>
           <motion.div style={{ clipPath: clip, background: "#2f3020" }} className="absolute inset-0">
-            <div className="absolute inset-x-2 top-14 h-[36%] sm:top-12 sm:h-[50%] lg:inset-y-0 lg:top-0 lg:right-4 lg:left-[44%] lg:h-full lg:py-20">
+            <div className="hero-diagram absolute inset-x-2 top-12 h-[30%] sm:h-[44%] lg:inset-y-0 lg:top-0 lg:right-4 lg:left-[44%] lg:h-full lg:py-20">
               <AfterNet />
             </div>
           </motion.div>
-          <motion.div style={{ left: dividerLeft }} className="pointer-events-none absolute inset-y-0 z-10 w-px -translate-x-1/2 bg-background/90">
+          <motion.div style={{ left: dividerLeft }} className="hero-divider pointer-events-none absolute top-0 z-10 h-[calc(3rem+30%)] w-px -translate-x-1/2 bg-background/90 sm:h-[calc(3rem+44%)] lg:bottom-0 lg:h-auto">
             <button
               type="button"
               role="slider"
@@ -193,7 +193,7 @@ export function NetworkHero() {
                 if (e.key === "ArrowLeft") pos.set(clamp(pos.get() - 0.05));
                 if (e.key === "ArrowRight") pos.set(clamp(pos.get() + 0.05));
               }}
-              className={`pointer-events-auto absolute top-[30%] left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-background text-foreground shadow-md sm:top-[34%] lg:top-1/2 ${interactive ? "ring-2 ring-primary/60" : ""}`}
+              className={`pointer-events-auto absolute top-[58%] left-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-background text-foreground shadow-md lg:top-1/2 lg:h-12 lg:w-12 ${interactive ? "ring-2 ring-primary/60" : ""}`}
             >
               <MoveHorizontal className="h-5 w-5" aria-hidden />
             </button>
@@ -204,21 +204,22 @@ export function NetworkHero() {
           <motion.span style={{ opacity: afterLabel }} className="absolute top-5 right-5 rounded-full bg-background/85 px-3 py-1 font-mono text-[11px] tracking-[0.18em] text-foreground uppercase backdrop-blur">
             After
           </motion.span>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#2f3020f2] via-[#2f3020b3] to-transparent px-6 pt-16 pb-7 sm:px-10 sm:pb-10 lg:inset-y-0 lg:right-auto lg:flex lg:w-[50%] lg:flex-col lg:justify-end lg:bg-gradient-to-r lg:pt-24 lg:pr-4 lg:pb-14 lg:pl-12">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#2f3020f2] via-[#2f3020d9] to-transparent px-5 pt-10 pb-6 sm:px-10 sm:pt-16 sm:pb-10 lg:inset-y-0 lg:right-auto lg:flex lg:w-[50%] lg:flex-col lg:justify-end lg:bg-gradient-to-r lg:pt-24 lg:pr-4 lg:pb-14 lg:pl-12">
             <motion.p {...intro(0.1)} className="inline-flex items-center gap-2 self-start rounded-full bg-background/90 px-3 py-1 font-mono text-[11px] tracking-[0.14em] text-foreground uppercase">
               <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden /> {profile.status}
             </motion.p>
-            <motion.h1 {...intro(0.15)} className="mt-4 max-w-3xl text-[2.1rem] leading-[1.04] font-semibold tracking-tight text-balance sm:text-6xl lg:text-[4.2rem]" style={{ color: PAPER }}>
+            <motion.h1 {...intro(0.15)} className="hero-h1 mt-3 max-w-3xl text-[1.85rem] leading-[1.05] font-semibold tracking-tight text-balance sm:mt-4 sm:text-6xl lg:text-[4.2rem]" style={{ color: PAPER }}>
               Multisite networks, kept secure and running.
             </motion.h1>
-            <motion.p {...intro(0.3)} className="mt-4 max-w-2xl text-base sm:text-lg" style={{ color: "#dedde5" }}>
-              {profile.name} · {profile.title}, New York. 7+ years across healthcare, banking, hospitality and an enterprise server data center.
+            <motion.p {...intro(0.3)} className="mt-3 max-w-2xl text-[15px] sm:mt-4 sm:text-lg" style={{ color: "#dedde5" }}>
+              <span className="sm:hidden">{profile.title} · New York · 7+ years</span>
+              <span className="hidden sm:inline">{profile.name} · {profile.title}, New York. 7+ years across healthcare, banking, hospitality and an enterprise server data center.</span>
             </motion.p>
-            <motion.div {...intro(0.4)} className="no-print pointer-events-auto mt-6 flex flex-wrap items-center gap-3">
-              <a href={profile.resumePdf} download className="inline-flex h-12 items-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-md transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">
+            <motion.div {...intro(0.4)} className="no-print pointer-events-auto mt-5 flex flex-wrap items-center gap-2.5 sm:mt-6 sm:gap-3">
+              <a href={profile.resumePdf} download className="inline-flex h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-md sm:h-12 sm:px-6 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">
                 Download resume
               </a>
-              <A to="/#work" className="inline-flex h-12 items-center rounded-full bg-background/90 px-6 text-sm font-semibold text-foreground backdrop-blur transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">
+              <A to="/#work" className="hero-second inline-flex h-11 items-center rounded-full bg-background/90 px-5 text-sm font-semibold text-foreground backdrop-blur sm:h-12 sm:px-6 transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">
                 See the work
               </A>
               {reduced ? (
@@ -227,12 +228,12 @@ export function NetworkHero() {
                 </button>
               ) : null}
             </motion.div>
-            <p className="mt-4 font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: "#cdcbd6cc" }}>
+            <p className="mt-3 font-mono text-[10px] tracking-[0.14em] uppercase sm:mt-4" style={{ color: "#cdcbd6cc" }}>
               Illustration · not a real employer network
             </p>
           </div>
           {!reduced ? (
-            <motion.div style={{ opacity: hintOpacity, color: INK }} className="pointer-events-none absolute top-[30%] left-1/2 flex -translate-x-1/2 translate-y-9 lg:left-[72%] items-center gap-2 rounded-full bg-background/85 px-4 py-2 font-mono text-[11px] tracking-[0.14em] whitespace-nowrap uppercase backdrop-blur sm:top-[34%] lg:top-1/2 lg:translate-y-12">
+            <motion.div style={{ opacity: hintOpacity, color: INK }} className="hero-hint pointer-events-none absolute top-[calc(3rem+30%)] left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-background/85 px-3.5 py-1.5 font-mono text-[10px] tracking-[0.14em] whitespace-nowrap uppercase backdrop-blur sm:top-[calc(3rem+44%)] sm:px-4 sm:py-2 sm:text-[11px] lg:top-1/2 lg:left-[72%] lg:translate-y-12">
               <ArrowDown className="h-3.5 w-3.5 animate-bounce" aria-hidden /> Scroll to reveal
             </motion.div>
           ) : null}
