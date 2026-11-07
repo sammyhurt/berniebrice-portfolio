@@ -299,7 +299,7 @@ function Contact() {
         <Reveal className="lg:col-span-2">
           <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">Contact</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Let's talk about the role.</h2>
-          <p className="text-muted-foreground mt-5 max-w-md">Hiring for infrastructure, systems, network, endpoint or IT operations engineering? A few lines is plenty, or call me.</p>
+          <p className="text-muted-foreground mt-5 max-w-md">Hiring for infrastructure, systems, network, endpoint or IT operations engineering, or an AI Engineer or AI Implementation Specialist? A few lines is plenty, or call me.</p>
           <dl className="mt-10 grid gap-4 text-sm">
             <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
               <dt className="text-muted-foreground">Email</dt>

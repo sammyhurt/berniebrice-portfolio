@@ -206,7 +206,6 @@ export function FieldWork() {
       id="on-site"
       eyebrow="On the job · Marks branch work"
       title="Watch me work"
-      lead="Rack builds, patching and firewall setup from branch work at Marks Home Care Agency. Clips are silent. Device labels and third-party signage are blurred."
       className="overflow-hidden"
     >
       <FieldMedia variant="home" />
