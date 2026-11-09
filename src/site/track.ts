@@ -86,10 +86,28 @@ function send(kind: "page" | "event", page: string) {
   }
 }
 
-/** A page view, once per page per visit. */
+/**
+ * Run once the page is actually on screen. Tabs reopened in the background, browser preloading and
+ * hidden tabs don't count until someone looks at them (and never count if nobody does).
+ */
+function whenSeen(fn: () => void) {
+  const d = document as Document & { prerendering?: boolean };
+  const seen = () => !d.prerendering && d.visibilityState === "visible";
+  if (seen()) return fn();
+  const check = () => {
+    if (!seen()) return;
+    document.removeEventListener("visibilitychange", check);
+    document.removeEventListener("prerenderingchange", check);
+    fn();
+  };
+  document.addEventListener("visibilitychange", check);
+  document.addEventListener("prerenderingchange", check);
+}
+
+/** A page view, once per page per visit, counted only when the page is seen. */
 export function logVisit(page: string) {
   source(); // fix the source on landing, before internal navigation changes the referrer
-  send("page", page);
+  whenSeen(() => send("page", page));
 }
 
 /** A key action, once per visit: intro, demo, resume, contact, linkedin, email, phone. */
