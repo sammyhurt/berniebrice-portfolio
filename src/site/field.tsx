@@ -74,7 +74,7 @@ function PhoneClip({ clip, onOpen }: { clip: Clip; onOpen: () => void }) {
       <button type="button" onClick={onOpen} className="group block w-full text-left" aria-label={`Play ${clip.title}`}>
         <PhoneFrame className="transition-transform duration-300 group-hover:-translate-y-1">
           <video ref={ref} data-src={m(`${clip.slug}-loop.mp4`)} poster={m(`${clip.slug}.jpg`)} muted loop playsInline preload="none" aria-hidden className="h-full w-full object-cover" />
-          <span className="bg-background/90 text-foreground absolute right-3 bottom-3 z-10 flex size-9 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110">
+          <span className="glass-light bg-background/90 text-foreground absolute right-3 bottom-3 z-10 flex size-9 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110">
             <Expand className="size-4" aria-hidden />
           </span>
         </PhoneFrame>
@@ -112,7 +112,7 @@ function Viewer({ item, onClose, onStep }: { item: Item; onClose: () => void; on
   const clip = item.kind === "clip" ? CLIPS[item.i] : null;
   const photo = item.kind === "photo" ? PHOTOS[item.i] : null;
   const label = clip ? clip.title : photo!.alt;
-  const nav = "bg-background/90 text-foreground flex size-11 items-center justify-center rounded-full shadow-md transition-transform hover:scale-105";
+  const nav = "glass-light bg-background/90 text-foreground flex size-11 items-center justify-center rounded-full shadow-md transition-transform hover:scale-105";
   return (
     <div role="dialog" aria-modal="true" aria-label={label} className="fixed inset-0 z-50 flex items-center justify-center bg-[#2f3020]/92 p-4 backdrop-blur-sm" onClick={onClose}>
       <button ref={closeRef} type="button" onClick={onClose} className={cn(nav, "absolute top-4 right-4 z-10")} aria-label="Close">

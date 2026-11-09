@@ -90,10 +90,10 @@ const NAV = [
 export function Header() {
   return (
     <header style={{ top: "var(--banner-h, 0px)" }} className="no-print fixed inset-x-0 z-40 transition-[top] duration-300 flex items-center justify-between gap-2 px-3 py-4 sm:px-8 lg:px-11">
-      <A to="/" className="bg-background/85 rounded-full px-4 py-2 text-sm font-bold tracking-tight shadow-sm backdrop-blur" aria-label="Bernie Brice, home">
+      <A to="/" className="glass-light bg-background/85 rounded-full px-4 py-2 text-sm font-bold tracking-tight shadow-sm backdrop-blur" aria-label="Bernie Brice, home">
         {profile.name}
       </A>
-      <nav aria-label="Primary" className="bg-background/85 hidden items-center gap-1 rounded-full p-1 shadow-sm backdrop-blur md:flex">
+      <nav aria-label="Primary" className="glass-light bg-background/85 hidden items-center gap-1 rounded-full p-1 shadow-sm backdrop-blur md:flex">
         {NAV.map((n) => (
           <A key={n.to} to={n.to} className="text-foreground/80 hover:bg-muted hover:text-foreground rounded-full px-4 py-1.5 text-sm font-medium transition-colors">
             {n.label}
@@ -101,7 +101,7 @@ export function Header() {
         ))}
       </nav>
       <div className="flex items-center gap-1.5">
-        <div className="bg-background/85 rounded-full shadow-sm backdrop-blur">
+        <div className="glass-light bg-background/85 rounded-full shadow-sm backdrop-blur">
           <ThemeButton />
         </div>
         <A to="/#contact" className="bg-primary text-primary-foreground rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]">

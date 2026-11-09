@@ -94,7 +94,7 @@ function Work({ list, track }: { list: CaseStudy[]; track?: (typeof tracks)[numb
             >
               <A to={`/work/${s.slug}`} className="flex h-full w-full flex-col p-6" aria-label={`${s.title}: ${s.summary}`}>
                 <div className="flex items-start justify-between gap-3">
-                  <span className={cn("rounded-full px-3 py-1 font-mono text-[11px] tracking-[0.14em] uppercase", dark ? "bg-background/15" : "bg-background/70")}>{s.tag}</span>
+                  <span className={cn("rounded-full px-3 py-1 font-mono text-[11px] tracking-[0.14em] uppercase", dark ? "glass-tag bg-background/15" : "bg-background/70")}>{s.tag}</span>
                   <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110", dark ? "bg-background text-foreground" : "bg-foreground text-background")}>
                     <ArrowUpRight className="size-4" aria-hidden />
                   </span>

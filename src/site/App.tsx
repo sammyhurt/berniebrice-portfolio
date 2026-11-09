@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { tracks, type TrackSlug } from "./data";
+import { glassPreview } from "./glass";
 import { Footer, Header, usePath } from "./parts";
 import { IntroBubble } from "./intro";
 import { SeasonBanner } from "./season";
@@ -16,6 +17,9 @@ export default function App() {
     watching = true;
     watchClicks();
   }
+  useEffect(() => {
+    document.documentElement.classList.toggle("glass", glassPreview());
+  }, []);
   const full = usePath();
   const path = full.split("#")[0].replace(/\/+$/, "") || "/";
   useEffect(() => {

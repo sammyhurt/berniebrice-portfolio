@@ -59,7 +59,7 @@ function Player({ onClose }: { onClose: () => void }) {
   const btn = "inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-semibold shadow-md transition-transform hover:scale-[1.03]";
   return (
     <div role="dialog" aria-modal="true" aria-label={`Intro video from ${profile.name}`} className="fixed inset-0 z-[60] flex items-center justify-center bg-[#2f3020]/92 p-4 backdrop-blur-sm" onClick={onClose}>
-      <button ref={closeRef} type="button" onClick={onClose} aria-label="Close intro" className="bg-background/90 text-foreground absolute top-4 right-4 z-10 flex size-11 items-center justify-center rounded-full shadow-md">
+      <button ref={closeRef} type="button" onClick={onClose} aria-label="Close intro" className="glass-light bg-background/90 text-foreground absolute top-4 right-4 z-10 flex size-11 items-center justify-center rounded-full shadow-md">
         <X className="size-5" />
       </button>
       <div className="flex max-h-full flex-col items-center" onClick={(e) => e.stopPropagation()}>
@@ -131,7 +131,7 @@ export function IntroBubble() {
     <>
       {show ? (
         <div className="no-print animate-in fade-in slide-in-from-bottom-4 fixed bottom-3 left-3 z-50 flex items-center gap-2 duration-500 sm:bottom-6 sm:left-6">
-          <button type="button" onClick={() => setOpen(true)} aria-label={`Play a 28-second intro from ${profile.name}`} className="group bg-background/95 flex items-center gap-2 rounded-full py-1 pr-3 pl-1 sm:gap-3 sm:py-1.5 sm:pr-4 sm:pl-1.5 shadow-[0_10px_30px_-10px_rgba(47,48,32,0.55)] ring-1 ring-black/10 backdrop-blur transition-transform hover:scale-[1.03] dark:ring-white/15">
+          <button type="button" onClick={() => setOpen(true)} aria-label={`Play a 28-second intro from ${profile.name}`} className="glass-light glass-solid group bg-background/95 flex items-center gap-2 rounded-full py-1 pr-3 pl-1 sm:gap-3 sm:py-1.5 sm:pr-4 sm:pl-1.5 shadow-[0_10px_30px_-10px_rgba(47,48,32,0.55)] ring-1 ring-black/10 backdrop-blur transition-transform hover:scale-[1.03] dark:ring-white/15">
             <span className="ring-primary relative block size-11 shrink-0 overflow-hidden rounded-full ring-2 sm:size-16">
               {reduced ? (
                 <img src={m("intro-bubble.jpg")} alt="" className="h-full w-full object-cover" />
@@ -147,7 +147,7 @@ export function IntroBubble() {
               <span className="text-muted-foreground hidden text-xs sm:block">Watch my intro · 28s</span>
             </span>
           </button>
-          <button type="button" onClick={hide} aria-label="Hide intro" className="bg-background/95 text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-full shadow-md sm:size-8 ring-1 ring-black/10 dark:ring-white/15">
+          <button type="button" onClick={hide} aria-label="Hide intro" className="glass-light glass-solid bg-background/95 text-muted-foreground hover:text-foreground flex size-7 items-center justify-center rounded-full shadow-md sm:size-8 ring-1 ring-black/10 dark:ring-white/15">
             <X className="size-4" />
           </button>
         </div>

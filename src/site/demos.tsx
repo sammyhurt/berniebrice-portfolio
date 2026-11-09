@@ -73,7 +73,7 @@ function Player({ demo, onClose }: { demo: Demo; onClose: () => void }) {
   }, [onClose]);
   return (
     <div role="dialog" aria-modal="true" aria-label={demo.title} className="fixed inset-0 z-50 flex items-center justify-center bg-[#2f3020]/92 p-3 backdrop-blur-sm sm:p-8" onClick={onClose}>
-      <button ref={closeRef} type="button" onClick={onClose} aria-label="Close" className="bg-background/90 text-foreground absolute top-4 right-4 z-10 flex size-11 items-center justify-center rounded-full shadow-md">
+      <button ref={closeRef} type="button" onClick={onClose} aria-label="Close" className="glass-light bg-background/90 text-foreground absolute top-4 right-4 z-10 flex size-11 items-center justify-center rounded-full shadow-md">
         <X className="size-5" />
       </button>
       <div className="w-full max-w-6xl" onClick={(e) => e.stopPropagation()}>
