@@ -198,3 +198,15 @@ html { scroll-behavior: smooth; }
   .hero-h1 { font-size: 1.45rem !important; }
   .hero-second { display: none !important; }
 }
+
+/* Keep browser autofill from painting inputs light blue (especially in dark mode) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--foreground);
+  -webkit-box-shadow: 0 0 0 1000px var(--card) inset;
+  box-shadow: 0 0 0 1000px var(--card) inset;
+  caret-color: var(--foreground);
+  transition: background-color 9999s ease-out 0s;
+}

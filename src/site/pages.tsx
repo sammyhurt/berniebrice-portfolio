@@ -287,7 +287,16 @@ const field = "h-12 rounded-xl border-border bg-card px-4 text-base shadow-none"
 function Contact() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [f, setF] = useState({ name: "", email: "", company: "", role: "", message: "", company_website: "" });
-  const ok = f.name.trim().length > 1 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email) && f.message.trim().length > 5;
+  const [tried, setTried] = useState(false);
+  const errors = {
+    name: f.name.trim().length < 2 ? "Add your name." : "",
+    email: !f.email.trim() ? "Add your email so I can reply." : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim()) ? "That email doesn't look right." : "",
+    message: f.message.trim().length < 2 ? "Add a short message, even one line is fine." : "",
+  };
+  const ok = !errors.name && !errors.email && !errors.message;
+  const show = (k: keyof typeof errors) => (tried ? errors[k] : "");
+  const req = <span className="text-primary" aria-hidden> *</span>;
+  const errText = (id: string, msg: string) => (msg ? <span id={id} className="text-[0.8rem] font-medium text-[#c2410c] dark:text-[#f0a080]">{msg}</span> : null);
   const send = async () => {
     setState("sending");
     try {
@@ -356,39 +365,52 @@ function Contact() {
           ) : (
             <form
               className="bg-card grid gap-4 rounded-[1.75rem] p-6 shadow-sm sm:p-8"
+              noValidate
               onSubmit={(e) => {
                 e.preventDefault();
-                if (ok) void send();
+                setTried(true);
+                if (ok) {
+                  void send();
+                  return;
+                }
+                const first = (["name", "email", "message"] as const).find((k) => errors[k]);
+                if (first) (e.currentTarget.elements.namedItem(first) as HTMLElement | null)?.focus();
               }}
             >
+              <p className="text-muted-foreground text-sm">
+                Fields marked <span className="text-primary">*</span> are required.
+              </p>
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="grid gap-2 text-sm font-medium">
-                  Your name
-                  <Input className={field} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" required />
+                <label className="grid content-start gap-2 text-sm font-medium">
+                  <span>Your name{req}</span>
+                  <Input name="name" className={cn(field, show("name") && "border-[#c2410c]")} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" aria-required="true" aria-invalid={!!show("name")} aria-describedby={show("name") ? "err-name" : undefined} />
+                  {errText("err-name", show("name"))}
                 </label>
-                <label className="grid gap-2 text-sm font-medium">
-                  Work email
-                  <Input className={field} type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" required />
+                <label className="grid content-start gap-2 text-sm font-medium">
+                  <span>Work email{req}</span>
+                  <Input name="email" className={cn(field, show("email") && "border-[#c2410c]")} type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" aria-required="true" aria-invalid={!!show("email")} aria-describedby={show("email") ? "err-email" : undefined} />
+                  {errText("err-email", show("email"))}
                 </label>
-                <label className="grid gap-2 text-sm font-medium">
+                <label className="grid content-start gap-2 text-sm font-medium">
                   Company
                   <Input className={field} value={f.company} onChange={(e) => setF({ ...f, company: e.target.value })} autoComplete="organization" />
                 </label>
-                <label className="grid gap-2 text-sm font-medium">
+                <label className="grid content-start gap-2 text-sm font-medium">
                   Role you're hiring for
                   <Input className={field} value={f.role} onChange={(e) => setF({ ...f, role: e.target.value })} />
                 </label>
               </div>
-              <label className="grid gap-2 text-sm font-medium">
-                Message
-                <Textarea className="border-border bg-card min-h-32 rounded-xl px-4 py-3 text-base shadow-none" value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} required />
+              <label className="grid content-start gap-2 text-sm font-medium">
+                <span>Message{req}</span>
+                <Textarea name="message" placeholder="Hi Bernie, I'm hiring for…" className={cn("border-border bg-card min-h-32 rounded-xl px-4 py-3 text-base shadow-none", show("message") && "border-[#c2410c]")} value={f.message} onChange={(e) => setF({ ...f, message: e.target.value })} aria-required="true" aria-invalid={!!show("message")} aria-describedby={show("message") ? "err-message" : undefined} />
+                {errText("err-message", show("message"))}
               </label>
               <label className="hidden" aria-hidden>
                 Leave this empty
                 <input tabIndex={-1} autoComplete="off" value={f.company_website} onChange={(e) => setF({ ...f, company_website: e.target.value })} />
               </label>
               <div className="flex flex-wrap items-center gap-4">
-                <button type="submit" disabled={!ok || state === "sending"} className={cn(pill, "bg-primary text-primary-foreground shadow-md disabled:opacity-50 disabled:hover:scale-100")}>
+                <button type="submit" disabled={state === "sending"} className={cn(pill, "bg-primary text-primary-foreground shadow-md disabled:opacity-70 disabled:hover:scale-100")}>
                   {state === "sending" ? "Sending…" : "Send message"}
                 </button>
                 {state === "error" ? <span className="text-sm text-rose-600">That didn't send. Please email {profile.email}.</span> : null}
