@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { profile } from "./data";
 import { A } from "./parts";
+import { currentSeason, FallingLeaves } from "./season";
 
 const clamp = (n: number) => Math.min(1, Math.max(0, n));
 const INK = "#2f3020";
@@ -110,6 +111,7 @@ export function NetworkHero() {
   const dragging = useRef(false);
   const [unlocked, setUnlocked] = useState(false);
   const [showAfter, setShowAfter] = useState(true);
+  const [season] = useState(currentSeason);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
   const pos = useMotionValue(0);
   // On wide screens the diagram sits on the right, so the wipe travels only across it.
@@ -179,6 +181,7 @@ export function NetworkHero() {
               <AfterNet />
             </div>
           </motion.div>
+          {season === "thanksgiving" ? <FallingLeaves /> : null}
           <motion.div style={{ left: dividerLeft }} className="hero-divider pointer-events-none absolute top-0 z-10 h-[calc(3rem+30%)] w-px -translate-x-1/2 bg-background/90 sm:h-[calc(3rem+44%)] lg:bottom-0 lg:h-auto">
             <button
               type="button"

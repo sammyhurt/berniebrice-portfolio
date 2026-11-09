@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { profile } from "./data";
 import { PhoneFrame } from "./field";
 import { go } from "./parts";
+import { currentSeason, SEASON_TEXT } from "./season";
 import { logVisit } from "./track";
 
 /** Personal intro: a small corner bubble with a silent loop, opening a player with sound. */
@@ -100,6 +101,7 @@ function Player({ onClose }: { onClose: () => void }) {
 export function IntroBubble() {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
+  const [season] = useState(currentSeason);
   const loopRef = useRef<HTMLVideoElement>(null);
   const reduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -141,7 +143,7 @@ export function IntroBubble() {
               </span>
             </span>
             <span className="text-left leading-tight">
-              <span className="block text-xs font-semibold sm:text-sm">👋 Hi, I'm Bernie</span>
+              <span className="block text-xs font-semibold sm:text-sm">{season ? SEASON_TEXT[season].bubble : "👋 Hi, I'm Bernie"}</span>
               <span className="text-muted-foreground hidden text-xs sm:block">Watch my intro · 28s</span>
             </span>
           </button>

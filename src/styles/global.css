@@ -210,3 +210,14 @@ textarea:-webkit-autofill {
   caret-color: var(--foreground);
   transition: background-color 9999s ease-out 0s;
 }
+
+/* Seasonal falling leaves (plays once) */
+@keyframes bb-leaf-fall {
+  0% { transform: translate3d(0, -2rem, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translate3d(var(--sway), 45vh, 0) rotate(calc(var(--spin) * 0.5)); }
+  85% { opacity: 1; }
+  100% { transform: translate3d(calc(var(--sway) * -0.4), 92vh, 0) rotate(var(--spin)); opacity: 0; }
+}
+.bb-leaf { animation-name: bb-leaf-fall; animation-timing-function: cubic-bezier(.45,.05,.55,.95); animation-fill-mode: both; animation-iteration-count: 1; will-change: transform, opacity; }
+@media (prefers-reduced-motion: reduce) { .bb-leaf { display: none; } }
