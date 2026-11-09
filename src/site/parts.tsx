@@ -89,7 +89,7 @@ const NAV = [
 /** Floating pill header from the template. */
 export function Header() {
   return (
-    <header className="no-print fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-2 px-3 py-4 sm:px-8 lg:px-11">
+    <header style={{ top: "var(--banner-h, 0px)" }} className="no-print fixed inset-x-0 z-40 transition-[top] duration-300 flex items-center justify-between gap-2 px-3 py-4 sm:px-8 lg:px-11">
       <A to="/" className="bg-background/85 rounded-full px-4 py-2 text-sm font-bold tracking-tight shadow-sm backdrop-blur" aria-label="Bernie Brice, home">
         {profile.name}
       </A>

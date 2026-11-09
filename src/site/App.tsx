@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { tracks, type TrackSlug } from "./data";
 import { Footer, Header, usePath } from "./parts";
 import { IntroBubble } from "./intro";
+import { SeasonBanner } from "./season";
 import { Home, NotFound, ResumePage, StudyPage } from "./pages";
 import { logVisit } from "./track";
 import { lazy, Suspense } from "react";
@@ -32,6 +33,7 @@ export default function App() {
   else page = <NotFound />;
   return (
     <div className="bg-background text-foreground flex min-h-dvh flex-col">
+      {path !== "/admin" ? <SeasonBanner /> : null}
       <Header />
       {page}
       <Footer />

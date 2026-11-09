@@ -24,9 +24,44 @@ export function currentSeason(now = new Date()): Season {
   return hit ? hit.season : null;
 }
 
-export const SEASON_TEXT: Record<Exclude<Season, null>, { bubble: string }> = {
-  thanksgiving: { bubble: "🍂 Happy Thanksgiving!" },
+export const SEASON_TEXT: Record<Exclude<Season, null>, { bubble: string; banner: string }> = {
+  thanksgiving: { bubble: "🍂 Happy Thanksgiving!", banner: "🍂 Happy Thanksgiving, thankful you stopped by." },
 };
+
+const BANNER_KEY = "bb-season-banner-hidden";
+/** Thin strip at the very top. Pushes the floating header down while shown; the ✕ hides it for the visit. */
+export function SeasonBanner() {
+  const [season] = useState(currentSeason);
+  const [show, setShow] = useState(() => {
+    try {
+      return sessionStorage.getItem(BANNER_KEY) !== "1";
+    } catch {
+      return true;
+    }
+  });
+  const visible = !!season && show;
+  useEffect(() => {
+    document.documentElement.style.setProperty("--banner-h", visible ? "38px" : "0px");
+    return () => document.documentElement.style.setProperty("--banner-h", "0px");
+  }, [visible]);
+  if (!visible || !season) return null;
+  const hide = () => {
+    try {
+      sessionStorage.setItem(BANNER_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setShow(false);
+  };
+  return (
+    <div role="note" className="no-print fixed inset-x-0 top-0 z-[45] flex h-[38px] items-center justify-center border-b-2 border-[#d96846] bg-[#2f3020] px-10 text-center text-xs font-medium text-[#f3f2f6] sm:text-sm">
+      <span className="truncate">{SEASON_TEXT[season].banner}</span>
+      <button type="button" onClick={hide} aria-label="Hide message" className="absolute right-2 flex size-8 items-center justify-center rounded-full text-[#cdcbd6] hover:text-white sm:right-4">
+        ✕
+      </button>
+    </div>
+  );
+}
 
 const LEAF_COLORS = ["#d96846", "#596235", "#8a8f4e", "#c98a5a", "#cdcbd6", "#e07a5a"];
 const LEAF_PATH = "M12 2C7 6 4 10 4 14a8 8 0 0 0 7 7.9V24h2v-2.1A8 8 0 0 0 20 14c0-4-3-8-8-12Z";
