@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download, Phone, Play } from "lucide-react";
 import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { education, jobs, metrics, profile, skills, studies, tracks, type CaseSt
 import { ScreenDemos, StudyDemos } from "./demos";
 import { FieldWork, StudyMedia } from "./field";
 import { NetworkHero } from "./hero";
+import { openIntro } from "./intro";
 import { A, FlowDiagram, LinkedInIcon, Reveal, Section } from "./parts";
 import { visitCode } from "./track";
 
@@ -269,6 +270,9 @@ function About() {
             <a href={profile.resumePdf} download className={cn(pill, "bg-primary text-primary-foreground shadow-md")}>
               <Download className="size-4" /> Download resume
             </a>
+            <button type="button" onClick={openIntro} className={cn(pill, "bg-foreground text-background")}>
+              <Play className="size-4 fill-current" /> Watch my 28-second intro
+            </button>
             <a href={profile.linkedin} target="_blank" rel="noreferrer" className={cn(pill, "bg-muted hover:bg-secondary")}>
               <LinkedInIcon /> LinkedIn
             </a>

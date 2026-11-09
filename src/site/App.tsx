@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { tracks, type TrackSlug } from "./data";
 import { Footer, Header, usePath } from "./parts";
+import { IntroBubble } from "./intro";
 import { Home, NotFound, ResumePage, StudyPage } from "./pages";
 import { logVisit } from "./track";
 import { lazy, Suspense } from "react";
@@ -34,6 +35,7 @@ export default function App() {
       <Header />
       {page}
       <Footer />
+      {path !== "/admin" ? <IntroBubble /> : null}
     </div>
   );
 }

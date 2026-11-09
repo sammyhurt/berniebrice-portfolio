@@ -53,7 +53,7 @@ function useLoop(ref: React.RefObject<HTMLVideoElement | null>) {
   }, [ref]);
 }
 
-function PhoneFrame({ children, className }: { children: ReactNode; className?: string }) {
+export function PhoneFrame({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <div className={cn("relative rounded-[2.4rem] bg-[#1f2016] p-[7px] shadow-[0_18px_40px_-18px_rgba(47,48,32,0.55)] ring-1 ring-black/40 dark:ring-white/15", className)}>
       <span aria-hidden className="absolute top-[42%] -left-[3px] h-14 w-[3px] rounded-l bg-[#1f2016]" />
