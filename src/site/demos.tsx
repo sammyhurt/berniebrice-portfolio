@@ -2,6 +2,7 @@ import { Play, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { A, Reveal, Section } from "./parts";
+import { trackEvent } from "./track";
 
 /** Screen recordings of working demos. Built with sample data only. */
 type Demo = { slug: string; title: string; summary: string; points: string[]; stack: string[]; study?: string; length: string };
@@ -57,6 +58,7 @@ function LoopPreview({ demo }: { demo: Demo }) {
 function Player({ demo, onClose }: { demo: Demo; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
+    trackEvent("demo");
     const prev = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     const key = (e: KeyboardEvent) => e.key === "Escape" && onClose();

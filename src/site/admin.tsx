@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { studies } from "./data";
 import { Chip } from "./parts";
 
 /** Private: tracked links per application and who opened them. Uses the same passcode as your Studios. */
@@ -15,7 +16,106 @@ const SITE = "https://berniebrice.com";
 
 interface LinkRow { code: string; company: string; role: string; note: string; created_at: string; visits: number; last_visit: string; pages: string[] }
 interface Recent { code: string; company: string; page: string; device: string; at: string }
-interface Data { ok: boolean; links: LinkRow[]; recent: Recent[]; error?: string }
+interface Win { visitors: number; views: number }
+interface KN { k: string; n: number }
+interface Session { start: string; last: string; source: string; device: string; company: string; pages: string[]; events: string[] }
+interface Stats { today: Win; week: Win; month: Win; byDay: { day: string; visitors: number; views: number }[]; sources: KN[]; pages: KN[]; events: KN[]; recent: Session[]; total_rows: number }
+interface Data { ok: boolean; links: LinkRow[]; recent: Recent[]; stats?: Stats; error?: string }
+
+const EVENT_LABEL: Record<string, string> = { intro: "Watched intro", demo: "Played demo", resume: "Opened resume", contact: "Sent a message", linkedin: "Clicked LinkedIn", email: "Clicked email", phone: "Clicked phone" };
+const SOURCE_LABEL: Record<string, string> = { linkedin: "LinkedIn", google: "Google", bing: "Bing", duckduckgo: "DuckDuckGo", yahoo: "Yahoo", facebook: "Facebook", instagram: "Instagram", x: "X", github: "GitHub", indeed: "Indeed", email: "Email", direct: "Direct", other: "Other site", internal: "Internal", "tracked link": "Tracked link" };
+const pageLabel = (p: string) => {
+  if (p === "/") return "Home";
+  if (p === "/resume") return "Resume page";
+  const w = p.match(/^\/work\/(.+)$/);
+  if (w) return studies.find((x) => x.slug === w[1])?.title || w[1];
+  const f = p.match(/^\/for\/(.+)$/);
+  return f ? `Role view: ${f[1]}` : p.replace(/^\//, "");
+};
+const dayLabel = (d: string) => new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+function StatsPanel({ st }: { st: Stats }) {
+  const max = Math.max(1, ...st.byDay.map((d) => d.visitors));
+  const card = "border-border bg-card rounded-2xl border p-5";
+  const List = ({ title, rows, fmt }: { title: string; rows: KN[]; fmt: (k: string) => string }) => (
+    <div className={card}>
+      <h3 className="text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase">{title}</h3>
+      {rows.length ? (
+        <ul className="mt-3 grid gap-1.5 text-sm">
+          {rows.map((r) => (
+            <li key={r.k} className="flex justify-between gap-3">
+              <span className="truncate">{fmt(r.k)}</span>
+              <span className="text-muted-foreground tabular-nums">{r.n}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-muted-foreground mt-3 text-sm">Nothing yet.</p>
+      )}
+    </div>
+  );
+  return (
+    <section className="mt-6 grid gap-4">
+      <div className="grid gap-4 sm:grid-cols-3">
+        {([["Today", st.today], ["Last 7 days", st.week], ["Last 30 days", st.month]] as const).map(([t, w]) => (
+          <div key={t} className={card}>
+            <p className="text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase">{t}</p>
+            <p className="mt-2 text-4xl font-semibold tabular-nums">{w.visitors}</p>
+            <p className="text-muted-foreground text-sm">
+              visitor{w.visitors === 1 ? "" : "s"} · {w.views} page view{w.views === 1 ? "" : "s"}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className={card}>
+        <div className="flex items-baseline justify-between">
+          <h3 className="text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase">Visitors per day · last 30 days</h3>
+          <span className="text-muted-foreground text-xs">New York time</span>
+        </div>
+        <div className="mt-4 flex h-32 items-end gap-[3px]" role="img" aria-label="Visitors per day for the last 30 days">
+          {st.byDay.map((d) => (
+            <div key={d.day} className="group relative flex h-full flex-1 items-end" title={`${dayLabel(d.day)}: ${d.visitors} visitor${d.visitors === 1 ? "" : "s"}, ${d.views} views`}>
+              <div className="bg-primary/85 group-hover:bg-primary w-full rounded-t-[3px]" style={{ height: `${d.visitors ? Math.max(6, (d.visitors / max) * 100) : 2}%`, opacity: d.visitors ? 1 : 0.25 }} />
+            </div>
+          ))}
+        </div>
+        <div className="text-muted-foreground mt-1.5 flex justify-between text-[11px]">
+          <span>{dayLabel(st.byDay[0]?.day || "")}</span>
+          <span>Today</span>
+        </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <List title="Where visitors came from" rows={st.sources} fmt={(k) => SOURCE_LABEL[k] || k} />
+        <List title="Top pages" rows={st.pages} fmt={pageLabel} />
+        <List title="What they did" rows={st.events} fmt={(k) => EVENT_LABEL[k] || k} />
+      </div>
+      <div className={card}>
+        <h3 className="text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase">Recent visits</h3>
+        {st.recent.length ? (
+          <ul className="mt-2 divide-y text-sm">
+            {st.recent.map((v, i) => (
+              <li key={i} className="grid gap-1 py-2.5">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="font-medium tabular-nums">{when(v.start)}</span>
+                  <Chip>{SOURCE_LABEL[v.source] || v.source}</Chip>
+                  {v.device ? <span className="text-muted-foreground">{v.device}</span> : null}
+                  {v.company ? <Chip tone="ok">{v.company}</Chip> : null}
+                </div>
+                <p className="text-muted-foreground">
+                  {v.pages.length ? v.pages.map(pageLabel).join(" → ") : "—"}
+                  {v.events.length ? <span className="text-foreground"> · {v.events.map((e) => EVENT_LABEL[e] || e).join(", ")}</span> : null}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-muted-foreground mt-3 text-sm">No visits yet. They'll show up here as people open your site.</p>
+        )}
+      </div>
+      <p className="text-muted-foreground text-xs">Bots and repeat refreshes are skipped. Your own visits aren't counted on any browser where you've opened this page. No names, emails, IP addresses or cookies are stored.</p>
+    </section>
+  );
+}
 
 const when = (iso: string) => (iso ? new Date(iso).toLocaleString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "");
 
@@ -105,8 +205,10 @@ export default function Admin() {
   };
   return (
     <main className="mx-auto max-w-5xl px-5 pt-28 pb-10 sm:px-8">
-      <h1 className="text-3xl font-semibold tracking-tight">Application links</h1>
-      <p className="text-muted-foreground mt-2 max-w-2xl">Make one link per application and paste it into the application or your email. When someone opens it, you see it here: which company, which pages, and when. Only the link code, the page and the device type are recorded.</p>
+      <h1 className="text-3xl font-semibold tracking-tight">Site visits</h1>
+      {data?.stats ? <StatsPanel st={data.stats} /> : <p className="text-muted-foreground mt-3 text-sm">{data ? "" : "Loading…"}</p>}
+      <h2 className="mt-14 text-3xl font-semibold tracking-tight">Application links</h2>
+      <p className="text-muted-foreground mt-2 max-w-2xl">Make one link per application and paste it into the application or your email. When someone opens it, you see it here: which company, which pages, what they watched or clicked, and when.</p>
       <div className="border-border bg-card mt-6 grid gap-3 rounded-2xl border p-5">
         <div className="grid gap-3 sm:grid-cols-3">
           <label className="grid gap-1 text-sm">

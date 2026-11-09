@@ -12,7 +12,7 @@ import { FieldWork, StudyMedia } from "./field";
 import { NetworkHero } from "./hero";
 import { openIntro } from "./intro";
 import { A, FlowDiagram, LinkedInIcon, Reveal, Section } from "./parts";
-import { visitCode } from "./track";
+import { trackEvent, visitCode } from "./track";
 
 const bySlug = (s: string) => studies.find((x) => x.slug === s);
 const pill = "inline-flex h-12 items-center gap-2 rounded-full px-6 text-sm font-semibold transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]";
@@ -303,6 +303,7 @@ function Contact() {
       const body = new URLSearchParams({ "form-name": "contact", ...f, came_from: visitCode() || "direct" });
       const r = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body.toString() });
       setState(r.ok ? "sent" : "error");
+      if (r.ok) trackEvent("contact");
     } catch {
       setState("error");
     }

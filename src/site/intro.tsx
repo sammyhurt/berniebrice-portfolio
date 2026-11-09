@@ -5,7 +5,7 @@ import { profile } from "./data";
 import { PhoneFrame } from "./field";
 import { go } from "./parts";
 import { currentSeason, SEASON_TEXT } from "./season";
-import { logVisit } from "./track";
+import { trackEvent } from "./track";
 
 /** Personal intro: a small corner bubble with a silent loop, opening a player with sound. */
 const OPEN_EVENT = "bb-intro-open";
@@ -42,7 +42,7 @@ function Player({ onClose }: { onClose: () => void }) {
     document.addEventListener("keydown", key);
     const o = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    logVisit("/intro");
+    trackEvent("intro");
     return () => {
       document.removeEventListener("keydown", key);
       document.body.style.overflow = o;

@@ -5,12 +5,17 @@ import { Footer, Header, usePath } from "./parts";
 import { IntroBubble } from "./intro";
 import { SeasonBanner } from "./season";
 import { Home, NotFound, ResumePage, StudyPage } from "./pages";
-import { logVisit } from "./track";
+import { logVisit, watchClicks } from "./track";
 import { lazy, Suspense } from "react";
 
 const Admin = lazy(() => import("./admin"));
 
+let watching = false;
 export default function App() {
+  if (!watching && typeof document !== "undefined") {
+    watching = true;
+    watchClicks();
+  }
   const full = usePath();
   const path = full.split("#")[0].replace(/\/+$/, "") || "/";
   useEffect(() => {
