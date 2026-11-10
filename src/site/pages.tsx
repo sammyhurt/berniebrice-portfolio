@@ -554,7 +554,7 @@ export function ResumePage() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">Resume</p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">The one-page version.</h1>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl"><span className="sr-only">Bernie Brice resume: </span>The one-page version.</h1>
           </div>
           <a href={profile.resumePdf} download className={cn(pill, "bg-primary text-primary-foreground shadow-md")}>
             <Download className="size-4" /> Download PDF

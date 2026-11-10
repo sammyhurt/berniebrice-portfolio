@@ -6,6 +6,7 @@ import { Footer, Header, usePath } from "./parts";
 import { IntroBubble } from "./intro";
 import { SeasonBanner } from "./season";
 import { Home, NotFound, ResumePage, StudyPage } from "./pages";
+import { SITE, seoFor } from "./seo";
 import { logVisit, watchClicks } from "./track";
 import { lazy, Suspense } from "react";
 
@@ -22,6 +23,30 @@ export default function App() {
   }, []);
   const full = usePath();
   const path = full.split("#")[0].replace(/\/+$/, "") || "/";
+  useEffect(() => {
+    // Keep the tab title and share tags in step with the page (the build writes the same tags into each page's HTML).
+    const known = path === "/" || path === "/resume" || /^\/work\/[a-z0-9-]+$/.test(path);
+    const s = seoFor(known ? path : "/");
+    const set = (sel: string, attr: string, val: string) => {
+      let el = document.head.querySelector(sel) as HTMLMetaElement | HTMLLinkElement | null;
+      if (!el) {
+        const [tag, rest] = sel.split("[");
+        el = document.createElement(tag) as HTMLMetaElement;
+        const [k, v] = rest.replace("]", "").split("=");
+        el.setAttribute(k, v.replace(/"/g, ""));
+        document.head.appendChild(el);
+      }
+      el.setAttribute(attr, val);
+    };
+    document.title = path === "/admin" ? "Admin · Bernie Brice" : known || path.startsWith("/for/") ? s.title : "Page not found · Bernie Brice";
+    set('meta[name="description"]', "content", s.description);
+    set('link[rel="canonical"]', "href", SITE + s.path);
+    set('meta[property="og:title"]', "content", s.title);
+    set('meta[property="og:description"]', "content", s.description);
+    set('meta[property="og:url"]', "content", SITE + s.path);
+    set('meta[property="og:image"]', "content", SITE + s.image);
+    set('meta[name="robots"]', "content", known ? "index, follow" : "noindex, follow");
+  }, [path]);
   useEffect(() => {
     if (path !== "/admin") logVisit(path);
     const h = location.hash.slice(1);

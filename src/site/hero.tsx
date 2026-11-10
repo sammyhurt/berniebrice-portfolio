@@ -212,6 +212,7 @@ export function NetworkHero() {
               <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden /> {profile.status}
             </motion.p>
             <motion.h1 {...intro(0.15)} className="hero-h1 mt-3 max-w-3xl text-[1.85rem] leading-[1.05] font-semibold tracking-tight text-balance sm:mt-4 sm:text-6xl lg:text-[4.2rem]" style={{ color: PAPER }}>
+              <span className="sr-only">{profile.name}, {profile.title} in New York. </span>
               Multisite networks, kept secure and running.
             </motion.h1>
             <motion.p {...intro(0.3)} className="mt-3 max-w-2xl text-[15px] sm:mt-4 sm:text-lg" style={{ color: "#dedde5" }}>
