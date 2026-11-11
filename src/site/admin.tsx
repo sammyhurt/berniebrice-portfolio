@@ -1,7 +1,7 @@
 import Copy from "@iconify-react/solar/copy-linear";
 import Eye from "@iconify-react/solar/eye-linear";
 import Lock from "@iconify-react/solar/lock-linear";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -210,48 +210,122 @@ function StatsPanel({ st }: { st: Stats }) {
           fmt={(k) => EVENT_LABEL[k] || k}
         />
       </div>
-      <div className={card}>
-        <h3 className="text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase">
-          Recent visits
-        </h3>
-        {st.recent.length ? (
-          <ul className="mt-2 divide-y text-sm">
-            {st.recent.map((v, i) => (
-              <li key={i} className="grid gap-1 py-2.5">
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className="font-medium tabular-nums">
-                    {when(v.start)}
-                  </span>
-                  <Chip>{SOURCE_LABEL[v.source] || v.source}</Chip>
-                  {v.device ? (
-                    <span className="text-muted-foreground">{v.device}</span>
-                  ) : null}
-                  {v.company ? <Chip tone="ok">{v.company}</Chip> : null}
-                </div>
-                <p className="text-muted-foreground">
-                  {v.pages.length ? v.pages.map(pageLabel).join(" → ") : "—"}
-                  {v.events.length ? (
-                    <span className="text-foreground">
-                      {" "}
-                      · {v.events.map((e) => EVENT_LABEL[e] || e).join(", ")}
-                    </span>
-                  ) : null}
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-muted-foreground mt-3 text-sm">
-            No visits yet. They'll show up here as people open your site.
-          </p>
-        )}
-      </div>
+      <RecentVisits rows={st.recent} card={card} />
       <p className="text-muted-foreground text-xs">
         Bots and repeat refreshes are skipped. Your own visits aren't counted on
-        any browser where you've opened this page. No names, emails, IP
-        addresses or cookies are stored.
+        any browser where you've opened this page. This visit counter stores no
+        names, emails, IP addresses or cookies. Heat maps come from Microsoft
+        Clarity, which is noted in the site footer.
       </p>
     </section>
+  );
+}
+
+const VISIT_FILTERS: { key: string; label: string; test: (src: string) => boolean }[] = [
+  { key: "all", label: "All", test: () => true },
+  { key: "tracked link", label: "Application links", test: (x) => x === "tracked link" },
+  { key: "linkedin", label: "LinkedIn", test: (x) => x === "linkedin" },
+  { key: "google", label: "Google", test: (x) => x === "google" },
+  { key: "direct", label: "Direct", test: (x) => x === "direct" },
+];
+const PER_PAGE = 10;
+
+/** Recent visits, newest first, 10 per page with numbered pages and source filters. */
+function RecentVisits({ rows, card }: { rows: Stats["recent"]; card: string }) {
+  const [filter, setFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const f = VISIT_FILTERS.find((x) => x.key === filter) || VISIT_FILTERS[0];
+  const shown = rows.filter((v) => f.test(v.source));
+  const pages = Math.max(1, Math.ceil(shown.length / PER_PAGE));
+  const cur = Math.min(page, pages);
+  const slice = shown.slice((cur - 1) * PER_PAGE, cur * PER_PAGE);
+  const counts = Object.fromEntries(VISIT_FILTERS.map((x) => [x.key, rows.filter((v) => x.test(v.source)).length]));
+  // Page buttons: first, last, and up to two either side of the current page, with … gaps.
+  const nums: (number | "gap")[] = [];
+  for (let i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - cur) <= 2) nums.push(i);
+    else if (nums[nums.length - 1] !== "gap") nums.push("gap");
+  }
+  const box = useRef<HTMLDivElement>(null);
+  const go = (n: number) => {
+    setPage(Math.max(1, Math.min(pages, n)));
+    const el = box.current;
+    if (el && el.getBoundingClientRect().top < 80) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const pill = (on: boolean) =>
+    `rounded-full px-3 py-1.5 text-sm transition-colors ${on ? "bg-primary text-primary-foreground" : "hover:bg-muted"}`;
+  return (
+    <div ref={box} className={`${card} scroll-mt-24`}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-muted-foreground font-mono text-[11px] tracking-[0.14em] uppercase">Recent visits</h3>
+        <div className="flex flex-wrap gap-1" role="group" aria-label="Filter visits">
+          {VISIT_FILTERS.map((x) => (
+            <button
+              key={x.key}
+              type="button"
+              className={pill(filter === x.key)}
+              aria-pressed={filter === x.key}
+              onClick={() => {
+                setFilter(x.key);
+                setPage(1);
+              }}
+            >
+              {x.label} <span className="tabular-nums opacity-70">{counts[x.key]}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      {slice.length ? (
+        <ul className="mt-2 divide-y text-sm">
+          {slice.map((v, i) => (
+            <li key={`${v.start}-${i}`} className="grid gap-1 py-2.5">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span className="font-medium tabular-nums">{when(v.start)}</span>
+                <Chip>{SOURCE_LABEL[v.source] || v.source}</Chip>
+                {v.device ? <span className="text-muted-foreground">{v.device}</span> : null}
+                {v.company ? <Chip tone="ok">{v.company}</Chip> : null}
+              </div>
+              <p className="text-muted-foreground">
+                {v.pages.length ? v.pages.map(pageLabel).join(" → ") : "—"}
+                {v.events.length ? (
+                  <span className="text-foreground"> · {v.events.map((e) => EVENT_LABEL[e] || e).join(", ")}</span>
+                ) : null}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-muted-foreground mt-3 text-sm">
+          {rows.length ? `No ${f.label.toLowerCase()} visits yet.` : "No visits yet. They'll show up here as people open your site."}
+        </p>
+      )}
+      {shown.length ? (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+          <p className="text-muted-foreground text-sm tabular-nums">
+            Showing {(cur - 1) * PER_PAGE + 1}–{Math.min(cur * PER_PAGE, shown.length)} of {shown.length} visit{shown.length === 1 ? "" : "s"}
+          </p>
+          {pages > 1 ? (
+            <nav className="flex flex-wrap items-center gap-1" aria-label="Visit pages">
+              <button type="button" className={pill(false) + " disabled:opacity-40"} disabled={cur === 1} onClick={() => go(cur - 1)}>
+                ‹ Prev
+              </button>
+              {nums.map((n, i) =>
+                n === "gap" ? (
+                  <span key={`g${i}`} className="text-muted-foreground px-1">…</span>
+                ) : (
+                  <button key={n} type="button" className={pill(n === cur) + " min-w-9 tabular-nums"} aria-current={n === cur ? "page" : undefined} onClick={() => go(n)}>
+                    {n}
+                  </button>
+                ),
+              )}
+              <button type="button" className={pill(false) + " disabled:opacity-40"} disabled={cur === pages} onClick={() => go(cur + 1)}>
+                Next ›
+              </button>
+            </nav>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
