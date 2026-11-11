@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -789,6 +789,8 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState("new");
+  const [page, setPage] = useState(1);
+  const listTop = useRef<HTMLDivElement>(null);
   const [pasting, setPasting] = useState(false);
   const call = useCallback(
     async (
@@ -844,6 +846,23 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
         ? fitScore(b) - fitScore(a)
         : String(b.created_at).localeCompare(String(a.created_at)),
     );
+  // 5 leads per page; if a lead leaves this filter and empties the last page, step back one page.
+  const PER_PAGE = 5;
+  const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+  const cur = Math.min(page, pages);
+  const pageList = list.slice((cur - 1) * PER_PAGE, cur * PER_PAGE);
+  const nums: (number | "gap")[] = [];
+  for (let i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - cur) <= 2) nums.push(i);
+    else if (nums[nums.length - 1] !== "gap") nums.push("gap");
+  }
+  const goPage = (n: number) => {
+    setPage(Math.max(1, Math.min(pages, n)));
+    const el = listTop.current;
+    if (el && el.getBoundingClientRect().top < 80) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const pagePill = (on: boolean) =>
+    cn("rounded-full px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-40", on ? "bg-foreground text-background" : "hover:bg-muted");
   const save = async (key: string, patch: Record<string, string>) => {
     const d = await call({ action: "update", lead_key: key, ...patch });
     if (d?.lead)
@@ -914,7 +933,10 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
             type="button"
             role="tab"
             aria-selected={filter === f.key}
-            onClick={() => setFilter(f.key)}
+            onClick={() => {
+              setFilter(f.key);
+              setPage(1);
+            }}
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
               filter === f.key
@@ -931,17 +953,45 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
       {leads === null ? (
         <p className="text-muted-foreground mt-6 text-sm">Loading…</p>
       ) : list.length ? (
-        <ul className="mt-5 grid gap-4">
-          {list.map((l) => (
-            <LeadCard
-              key={l.lead_key}
-              lead={l}
-              stat={stats[l.link_code]}
-              busy={busy}
-              onSave={(p) => save(l.lead_key, p)}
-            />
-          ))}
-        </ul>
+        <div ref={listTop} className="scroll-mt-24">
+          <ul className="mt-5 grid gap-4">
+            {pageList.map((l) => (
+              <LeadCard
+                key={l.lead_key}
+                lead={l}
+                stat={stats[l.link_code]}
+                busy={busy}
+                onSave={(p) => save(l.lead_key, p)}
+              />
+            ))}
+          </ul>
+          <div className="border-border mt-5 flex flex-wrap items-center justify-between gap-3 border-t pt-4">
+            <p className="text-muted-foreground text-sm tabular-nums">
+              Showing {(cur - 1) * PER_PAGE + 1}–{Math.min(cur * PER_PAGE, list.length)} of {list.length} lead{list.length === 1 ? "" : "s"}
+            </p>
+            {pages > 1 ? (
+              <nav className="flex flex-wrap items-center gap-1" aria-label="Lead pages">
+                <button type="button" className={pagePill(false)} disabled={cur === 1} onClick={() => goPage(cur - 1)}>
+                  ‹ Prev
+                </button>
+                {nums.map((n, i) =>
+                  n === "gap" ? (
+                    <span key={`g${i}`} className="text-muted-foreground px-1">
+                      …
+                    </span>
+                  ) : (
+                    <button key={n} type="button" className={cn(pagePill(n === cur), "min-w-9 tabular-nums")} aria-current={n === cur ? "page" : undefined} onClick={() => goPage(n)}>
+                      {n}
+                    </button>
+                  ),
+                )}
+                <button type="button" className={pagePill(false)} disabled={cur === pages} onClick={() => goPage(cur + 1)}>
+                  Next ›
+                </button>
+              </nav>
+            ) : null}
+          </div>
+        </div>
       ) : (
         <p className="text-muted-foreground mt-6 text-sm">
           {filter === "new"
