@@ -1,3 +1,4 @@
+import { CLARITY_DASHBOARD } from "./clarity";
 import Copy from "@iconify-react/solar/copy-linear";
 import Eye from "@iconify-react/solar/eye-linear";
 import Lock from "@iconify-react/solar/lock-linear";
@@ -421,6 +422,21 @@ export default function Admin() {
               {data ? "" : "Loading…"}
             </p>
           )}
+          <a
+            href={CLARITY_DASHBOARD}
+            target="_blank"
+            rel="noreferrer"
+            className="border-border bg-card hover:bg-muted mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border p-5"
+          >
+            <span>
+              <span className="block font-semibold">Heat maps and visit replays</span>
+              <span className="text-muted-foreground block text-sm">
+                Where visitors click and how far they scroll, in Microsoft Clarity. Filter by{" "}
+                <span className="font-mono">for</span> to see visits from one application link.
+              </span>
+            </span>
+            <span className="text-sm font-semibold">Open Clarity ↗</span>
+          </a>
           <h2 className="mt-14 text-3xl font-semibold tracking-tight">
             Application links
           </h2>

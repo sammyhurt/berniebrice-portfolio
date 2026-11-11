@@ -128,7 +128,10 @@ export function Footer() {
         <a className="hover:text-foreground inline-flex items-center gap-1.5" href={profile.linkedin} target="_blank" rel="noreferrer">
           <LinkedInIcon /> LinkedIn
         </a>
-        <span className="ml-auto text-xs">Diagrams are simplified and generalized. No employer addresses, hostnames or data are shown.</span>
+        <span className="ml-auto grid gap-1 text-xs sm:text-right">
+          <span>Diagrams are simplified and generalized. No employer addresses, hostnames or data are shown.</span>
+          <span>This site uses Microsoft Clarity to see how visitors use it. Form entries are never recorded.</span>
+        </span>
       </div>
     </footer>
   );

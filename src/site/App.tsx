@@ -6,6 +6,7 @@ import { Footer, Header, usePath } from "./parts";
 import { IntroBubble } from "./intro";
 import { SeasonBanner } from "./season";
 import { Home, NotFound, ResumePage, StudyPage } from "./pages";
+import { clarityFor } from "./clarity";
 import { SITE, seoFor } from "./seo";
 import { logVisit, watchClicks } from "./track";
 import { lazy, Suspense } from "react";
@@ -48,6 +49,7 @@ export default function App() {
     set('meta[name="robots"]', "content", known ? "index, follow" : "noindex, follow");
   }, [path]);
   useEffect(() => {
+    clarityFor(path);
     if (path !== "/admin") logVisit(path);
     const h = location.hash.slice(1);
     if (h) setTimeout(() => document.getElementById(h)?.scrollIntoView({ block: "start" }), 50);

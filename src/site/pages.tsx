@@ -365,6 +365,7 @@ function Contact() {
             </div>
           ) : (
             <form
+              data-clarity-mask="true"
               className="bg-card grid gap-4 rounded-[1.75rem] p-6 shadow-sm sm:p-8"
               noValidate
               onSubmit={(e) => {
