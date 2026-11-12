@@ -113,6 +113,37 @@ export function logVisit(page: string) {
 /** A key action, once per visit: intro, demo, resume, contact, linkedin, email, phone. */
 export function trackEvent(name: "intro" | "demo" | "resume" | "contact" | "linkedin" | "email" | "phone") {
   send("event", name);
+  tagClarity(name);
+}
+
+/** Readable Clarity event names. The four that mean a visitor took a next step also mark the session as converted. */
+const CLARITY_EVENTS: Record<string, { event: string; converts: boolean }> = {
+  resume: { event: "resume_download", converts: true },
+  contact: { event: "contact_sent", converts: true },
+  linkedin: { event: "linkedin_click", converts: true },
+  email: { event: "email_click", converts: true },
+  phone: { event: "phone_click", converts: true },
+  intro: { event: "intro_video", converts: false },
+  demo: { event: "demo_opened", converts: false },
+};
+
+/**
+ * Tell Clarity about key actions so replays can be filtered: "converted = yes" sessions vs the rest.
+ * Clarity only exists for real visitors (see clarity.ts), so this does nothing for the owner, bots or /admin.
+ */
+function tagClarity(name: string) {
+  const c = typeof window !== "undefined" ? window.clarity : undefined;
+  const e = CLARITY_EVENTS[name];
+  if (!c || !e) return;
+  try {
+    c("event", e.event);
+    if (e.converts) {
+      c("set", "converted", "yes");
+      c("upgrade", e.event); // keep this session's replay
+    }
+  } catch {
+    /* tracking never blocks the page */
+  }
 }
 
 /** Count clicks on the resume PDF, LinkedIn, email and phone links anywhere on the site. */
