@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download, Phone, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download, Play } from "lucide-react";
 import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
@@ -314,28 +314,20 @@ function Contact() {
         <Reveal className="lg:col-span-2">
           <p className="text-primary font-mono text-xs tracking-[0.18em] uppercase">Contact</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-tight text-balance sm:text-5xl">Let's talk about the role.</h2>
-          <p className="text-muted-foreground mt-5 max-w-md">Hiring for infrastructure, systems, network, endpoint or IT operations engineering, or an AI Engineer or AI Implementation Specialist? A few lines is plenty, or call me.</p>
+          <p className="text-muted-foreground mt-5 max-w-md">Hiring for infrastructure, systems, network, endpoint or IT operations engineering, or an AI Engineer or AI Implementation Specialist? A few lines is plenty.</p>
           <dl className="mt-10 grid gap-4 text-sm">
             <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
               <dt className="text-muted-foreground">Email</dt>
               <dd>
-                <a href={`mailto:${profile.email}`} className="underline-offset-4 hover:underline">
+                <a href={`mailto:${profile.email}`} className="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
                   {profile.email}
-                </a>
-              </dd>
-            </div>
-            <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
-              <dt className="text-muted-foreground">Phone</dt>
-              <dd>
-                <a href={profile.phoneHref} className="inline-flex items-center gap-1.5 tabular-nums underline-offset-4 hover:underline">
-                  <Phone className="size-3.5" aria-hidden /> {profile.phone}
                 </a>
               </dd>
             </div>
             <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
               <dt className="text-muted-foreground">LinkedIn</dt>
               <dd>
-                <a href={profile.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 underline-offset-4 hover:underline">
+                <a href={profile.linkedin} target="_blank" rel="noreferrer" className="-my-2.5 inline-flex min-h-11 items-center gap-1.5 underline-offset-4 hover:underline">
                   <LinkedInIcon /> Bernie Brice
                 </a>
               </dd>
@@ -347,7 +339,7 @@ function Contact() {
             <div className="border-foreground/15 flex justify-between gap-4 border-b pb-3">
               <dt className="text-muted-foreground">Resume</dt>
               <dd>
-                <a href={profile.resumePdf} download className="underline-offset-4 hover:underline">
+                <a href={profile.resumePdf} download className="-my-2.5 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
                   Download PDF
                 </a>
               </dd>
@@ -455,7 +447,7 @@ export function StudyPage({ slug }: { slug: string }) {
   return (
     <main className="px-5 pt-28 pb-10 sm:px-8 lg:px-11">
       <div className="mx-auto max-w-4xl">
-        <A to="/#work" className="text-muted-foreground hover:text-foreground no-print inline-flex items-center gap-1.5 text-sm">
+        <A to="/#work" className="text-muted-foreground hover:text-foreground no-print -my-3 inline-flex min-h-11 items-center gap-1.5 text-sm">
           <ArrowLeft className="size-4" /> All case studies
         </A>
         <Reveal>

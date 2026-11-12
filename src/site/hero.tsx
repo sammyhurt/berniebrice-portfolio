@@ -209,7 +209,7 @@ export function NetworkHero() {
           </motion.span>
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#2f3020f2] via-[#2f3020d9] to-transparent px-5 pt-10 pb-6 sm:px-10 sm:pt-16 sm:pb-10 lg:inset-y-0 lg:right-auto lg:flex lg:w-[50%] lg:flex-col lg:justify-end lg:bg-gradient-to-r lg:pt-24 lg:pr-4 lg:pb-14 lg:pl-12">
             <motion.p {...intro(0.1)} className="glass-dark inline-flex items-center gap-2 self-start rounded-full bg-background/90 px-3 py-1 font-mono text-[11px] tracking-[0.14em] text-foreground uppercase">
-              <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden /> {profile.status}
+              {profile.status}
             </motion.p>
             <motion.h1 {...intro(0.15)} className="hero-h1 mt-3 max-w-3xl text-[1.85rem] leading-[1.05] font-semibold tracking-tight text-balance sm:mt-4 sm:text-6xl lg:text-[4.2rem]" style={{ color: PAPER }}>
               <span className="sr-only">{profile.name}, {profile.title} in New York. </span>

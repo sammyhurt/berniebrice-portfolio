@@ -10,10 +10,8 @@ export const profile = {
   email: "bricebernie@gmail.com",
   linkedin: "https://www.linkedin.com/in/bernie-brice-82491098",
   resumePdf: "/Bernie-Brice-Resume.pdf",
-  phone: "(908) 590-2955",
-  phoneHref: "tel:+19085902955",
   headshot: "/headshot.jpg",
-  status: "Open to new roles",
+  status: "CompTIA Security+ certified",
   pitch: "I keep multisite networks, identity and infrastructure running, and I automate the work around them.",
   summary:
     "IT Infrastructure Engineer with 7+ years supporting enterprise technology across healthcare, banking and hospitality. I serve as the primary internal onsite IT resource for a multisite healthcare organization: SonicWall firewalls, site-to-site VPNs, UniFi/Cisco switching, Ubiquiti wireless, VLAN segmentation, branch relocations, vendor escalations and critical incident response.",

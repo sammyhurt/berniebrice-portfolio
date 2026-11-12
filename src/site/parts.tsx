@@ -119,13 +119,10 @@ export function Footer() {
         <span>
           {profile.name} · {profile.location}
         </span>
-        <a className="hover:text-foreground" href={`mailto:${profile.email}`}>
+        <a className="hover:text-foreground inline-flex min-h-11 items-center" href={`mailto:${profile.email}`}>
           {profile.email}
         </a>
-        <a className="hover:text-foreground tabular-nums" href={profile.phoneHref}>
-          {profile.phone}
-        </a>
-        <a className="hover:text-foreground inline-flex items-center gap-1.5" href={profile.linkedin} target="_blank" rel="noreferrer">
+        <a className="hover:text-foreground inline-flex min-h-11 items-center gap-1.5" href={profile.linkedin} target="_blank" rel="noreferrer">
           <LinkedInIcon /> LinkedIn
         </a>
         <span className="ml-auto grid gap-1 text-xs sm:text-right">
