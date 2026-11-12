@@ -575,3 +575,46 @@ export function NotFound() {
     </main>
   );
 }
+
+/** Plain-language privacy notice, linked only from the footer. Not in the sitemap and set to noindex. */
+export function PrivacyPage() {
+  const h = "mt-10 text-xl font-semibold tracking-tight";
+  const p = "text-muted-foreground mt-3 leading-relaxed";
+  return (
+    <main className="px-5 pt-28 pb-16 sm:px-8 lg:px-11">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="text-4xl font-semibold tracking-tight">Privacy</h1>
+        <p className={p}>A short note on what this site collects when you visit, and why.</p>
+
+        <h2 className={h}>Visit counter</h2>
+        <p className={p}>
+          The site counts page views, where a visit came from (for example LinkedIn or a search engine) and the type of device. It stores no names, emails, IP addresses or
+          cookies.
+        </p>
+
+        <h2 className={h}>Microsoft Clarity</h2>
+        <p className={p}>
+          This site uses Microsoft Clarity to understand how visitors use it through heat maps, session replays and usage statistics, so the site can be improved. Clarity
+          records clicks, scrolling and mouse movement, and uses cookies to do it. Anything typed into the contact form is masked and never recorded. Data is collected and
+          used by both this site and Microsoft. By using this site, you agree to that. To learn more, see the{" "}
+          <a href="https://www.microsoft.com/privacy/privacystatement" target="_blank" rel="noreferrer" className="text-foreground underline underline-offset-4">
+            Microsoft Privacy Statement
+          </a>
+          .
+        </p>
+
+        <h2 className={h}>Contact form</h2>
+        <p className={p}>What you send through the contact form goes only to Bernie and is used only to reply to you.</p>
+
+        <h2 className={h}>Questions</h2>
+        <p className={p}>
+          Email{" "}
+          <a href={`mailto:${profile.email}`} className="text-foreground underline underline-offset-4">
+            {profile.email}
+          </a>
+          .
+        </p>
+      </div>
+    </main>
+  );
+}

@@ -127,7 +127,9 @@ export function Footer() {
         </a>
         <span className="ml-auto grid gap-1 text-xs sm:text-right">
           <span>Diagrams are simplified and generalized. No employer addresses, hostnames or data are shown.</span>
-          <span>This site uses Microsoft Clarity to see how visitors use it. Form entries are never recorded.</span>
+          <A to="/privacy" className="hover:text-foreground inline-flex min-h-11 items-center underline-offset-4 hover:underline sm:min-h-0 sm:justify-end">
+            Privacy
+          </A>
         </span>
       </div>
     </footer>

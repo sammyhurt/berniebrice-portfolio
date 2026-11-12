@@ -5,7 +5,7 @@ import { glassPreview } from "./glass";
 import { Footer, Header, usePath } from "./parts";
 import { IntroBubble } from "./intro";
 import { SeasonBanner } from "./season";
-import { Home, NotFound, ResumePage, StudyPage } from "./pages";
+import { Home, NotFound, PrivacyPage, ResumePage, StudyPage } from "./pages";
 import { clarityFor } from "./clarity";
 import { SITE, seoFor } from "./seo";
 import { logVisit, watchClicks } from "./track";
@@ -39,7 +39,7 @@ export default function App() {
       }
       el.setAttribute(attr, val);
     };
-    document.title = path === "/admin" ? "Admin · Bernie Brice" : known || path.startsWith("/for/") ? s.title : "Page not found · Bernie Brice";
+    document.title = path === "/admin" ? "Admin · Bernie Brice" : path === "/privacy" ? "Privacy · Bernie Brice" : known || path.startsWith("/for/") ? s.title : "Page not found · Bernie Brice";
     set('meta[name="description"]', "content", s.description);
     set('link[rel="canonical"]', "href", SITE + s.path);
     set('meta[property="og:title"]', "content", s.title);
@@ -60,6 +60,7 @@ export default function App() {
   else if (m && m[1] === "work") page = <StudyPage slug={m[2]} />;
   else if (m && m[1] === "for" && tracks.some((t) => t.slug === m[2])) page = <Home trackSlug={m[2] as TrackSlug} />;
   else if (path === "/resume") page = <ResumePage />;
+  else if (path === "/privacy") page = <PrivacyPage />;
   else if (path === "/admin")
     page = (
       <Suspense fallback={null}>

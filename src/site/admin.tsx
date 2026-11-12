@@ -215,7 +215,7 @@ function StatsPanel({ st }: { st: Stats }) {
         Bots and repeat refreshes are skipped. Your own visits aren't counted on
         any browser where you've opened this page. This visit counter stores no
         names, emails, IP addresses or cookies. Heat maps come from Microsoft
-        Clarity, which is noted in the site footer.
+        Clarity, which is noted on the Privacy page linked in the footer.
       </p>
     </section>
   );
