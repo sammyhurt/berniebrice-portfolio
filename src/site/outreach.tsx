@@ -9,6 +9,7 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
+  X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -790,6 +791,7 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState("new");
   const [page, setPage] = useState(1);
+  const [q, setQ] = useState("");
   const listTop = useRef<HTMLDivElement>(null);
   const [pasting, setPasting] = useState(false);
   const call = useCallback(
@@ -839,10 +841,18 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
       ),
     [leads],
   );
+  // Typing in the search box looks through every lead, whatever tab it sits in.
+  const needle = q.trim().toLowerCase();
+  const searching = needle.length > 0;
+  const hit = (l: Lead) =>
+    [l.company, l.company_domain, l.job_title, l.contact_name, l.contact_title, l.job_location]
+      .join(" ")
+      .toLowerCase()
+      .includes(needle);
   const list = (leads || [])
-    .filter((FILTERS.find((f) => f.key === filter) || FILTERS[0]).test)
+    .filter(searching ? hit : (FILTERS.find((f) => f.key === filter) || FILTERS[0]).test)
     .sort((a, b) =>
-      filter === "new"
+      !searching && filter === "new"
         ? fitScore(b) - fitScore(a)
         : String(b.created_at).localeCompare(String(a.created_at)),
     );
@@ -932,14 +942,15 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
             key={f.key}
             type="button"
             role="tab"
-            aria-selected={filter === f.key}
+            aria-selected={!searching && filter === f.key}
             onClick={() => {
               setFilter(f.key);
               setPage(1);
+              setQ("");
             }}
             className={cn(
               "rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
-              filter === f.key
+              !searching && filter === f.key
                 ? "bg-foreground text-background"
                 : "bg-muted hover:bg-secondary",
               f.key === "due" && counts.due ? "ring-2 ring-amber-400/70" : "",
@@ -948,6 +959,35 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
             {f.label} <span className="opacity-70">{counts[f.key] ?? 0}</span>
           </button>
         ))}
+      </div>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <label className="relative w-full max-w-sm">
+          <span className="sr-only">Search leads</span>
+          <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+          <Input
+            type="search"
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setPage(1);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setQ("");
+            }}
+            placeholder="Search company, job title or contact"
+            className="rounded-full pr-9 pl-9 [&::-webkit-search-cancel-button]:hidden"
+          />
+          {q ? (
+            <button type="button" aria-label="Clear search" onClick={() => setQ("")} className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2">
+              <X className="size-4" />
+            </button>
+          ) : null}
+        </label>
+        {searching ? (
+          <p className="text-muted-foreground text-sm" aria-live="polite">
+            {list.length} match{list.length === 1 ? "" : "es"} across all leads
+          </p>
+        ) : null}
       </div>
       {err ? <p className="mt-4 text-sm text-rose-600">{err}</p> : null}
       {leads === null ? (
@@ -994,7 +1034,9 @@ export function Outreach({ pass, links }: { pass: string; links: LinkStat[] }) {
         </div>
       ) : (
         <p className="text-muted-foreground mt-6 text-sm">
-          {filter === "new"
+          {searching
+            ? `No leads match "${q.trim()}". Try part of the company name.`
+            : filter === "new"
             ? "Nothing waiting. New leads arrive at 6:47 AM and 1:47 PM, or paste a job you found."
             : "Nothing here yet."}
         </p>
