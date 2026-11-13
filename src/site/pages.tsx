@@ -24,7 +24,7 @@ function Facts() {
     { k: "Experience", v: "7+ years", sub: "Healthcare, banking, hospitality, data center" },
     { k: "Certified", v: "CompTIA Security+" },
     { k: "Based in", v: profile.location },
-    { k: "Open to", v: profile.availability, sub: "Infrastructure · Systems · Network · Endpoint · IT Ops roles" },
+    { k: "Focus", v: "Infrastructure and systems", sub: "Networking · Identity · Endpoint · IT operations" },
   ];
   return (
     <section aria-label="At a glance" className="px-5 pt-6 sm:px-8 lg:px-11">
@@ -50,7 +50,7 @@ function Results() {
       </Reveal>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {metrics.map((m, i) => (
-          <Reveal key={m.label} delay={i * 0.06}>
+          <Reveal as="li" key={m.label} delay={i * 0.06}>
             <A to={`/work/${m.study}`} className="bg-card group grid h-full gap-2 rounded-[1.75rem] p-6 shadow-sm transition-shadow hover:shadow-md">
               <span className="text-primary text-5xl font-semibold tracking-tight tabular-nums">{m.value}</span>
               <span className="leading-snug">{m.label}</span>
@@ -132,8 +132,8 @@ function Experience() {
         {jobs.map((j, i) => {
           const on = open === j.org;
           return (
-            <Reveal key={j.org} delay={Math.min(i, 3) * 0.05}>
-              <li className="bg-card rounded-[1.5rem] shadow-sm">
+            <Reveal as="li" key={j.org} delay={Math.min(i, 3) * 0.05} className="bg-card rounded-[1.5rem] shadow-sm">
+              <>
                 <button type="button" className="flex w-full flex-wrap items-baseline gap-x-4 gap-y-1 px-6 py-5 text-left" onClick={() => setOpen(on ? null : j.org)} aria-expanded={on}>
                   <span className="text-lg font-semibold">{j.org}</span>
                   <span className="text-muted-foreground">{j.title}</span>
@@ -160,7 +160,7 @@ function Experience() {
                     ) : null}
                   </div>
                 ) : null}
-              </li>
+              </>
             </Reveal>
           );
         })}
@@ -258,12 +258,12 @@ function About() {
           <p className="mt-6 max-w-2xl text-lg leading-relaxed">{profile.about}</p>
           <dl className="mt-10 grid max-w-2xl gap-6 sm:grid-cols-2">
             <div>
-              <dt className={label}>Looking for</dt>
-              <dd className="mt-2 leading-relaxed">{[...tracks.map((t) => t.label), "AI Engineer"].join(", ")} or AI Implementation Specialist roles</dd>
+              <dt className={label}>Focus areas</dt>
+              <dd className="mt-2 leading-relaxed">Infrastructure, systems, networking, endpoint and IT operations, with hands-on AI and automation work</dd>
             </div>
             <div>
-              <dt className={label}>Work setup</dt>
-              <dd className="mt-2 leading-relaxed">{profile.availability}, based in {profile.location}</dd>
+              <dt className={label}>Based in</dt>
+              <dd className="mt-2 leading-relaxed">{profile.location}</dd>
             </div>
           </dl>
           <div className="no-print mt-10 flex flex-wrap gap-3">

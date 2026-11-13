@@ -4,6 +4,7 @@
  * The app replaces the readable content as soon as it loads.
  */
 import { build } from "esbuild";
+import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -51,5 +52,11 @@ writeFileSync(
     .map((p) => `  <url><loc>${SITE}${p === "/" ? "/" : p}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>${p === "/" ? "1.0" : p === "/resume" ? "0.9" : "0.7"}</priority></url>`)
     .join("\n")}\n  <url><loc>${SITE}/Bernie-Brice-Resume.pdf</loc><lastmod>${today}</lastmod><priority>0.6</priority></url>\n</urlset>\n`,
 );
+// Content-Security-Policy: allow exactly the inline scripts that are in the built page (the theme switch), by fingerprint.
+const inline = [...shell.matchAll(/<script(?![^>]*\b(?:src|type)=)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => `'sha256-${createHash("sha256").update(m[1]).digest("base64")}'`);
+const headersFile = join(dist, "_headers");
+const headers = readFileSync(headersFile, "utf8");
+if (!headers.includes("__INLINE_SCRIPT_HASHES__")) throw new Error("prerender: _headers is missing the inline script placeholder");
+writeFileSync(headersFile, headers.replace("__INLINE_SCRIPT_HASHES__", [...new Set(inline)].join(" ")));
 rmSync(dirname(tmp), { recursive: true, force: true });
 console.log(`prerendered ${indexable.length} pages`);

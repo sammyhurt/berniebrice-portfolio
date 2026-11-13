@@ -11,7 +11,7 @@ import { studies } from "./data";
 import { Outreach } from "./outreach";
 import { Chip } from "./parts";
 
-/** Private: tracked links per application and who opened them. Uses the same passcode as your Studios. */
+/** Private: tracked links per application and who opened them. Has its own passcode (n8n credential "Bernie Portfolio Passcode"). */
 const ADMIN_URL =
   "https://subletlyco.app.n8n.cloud/webhook/bernie-portfolio-admin";
 const PASS_KEY = "bb-admin-pass";
@@ -415,7 +415,7 @@ export default function Admin() {
         </div>
         <h1 className="text-center text-2xl font-semibold">Your admin</h1>
         <p className="text-muted-foreground text-center text-sm">
-          Private. Enter the same passcode you use for your Studios.
+          Private. Enter your portfolio passcode.
         </p>
         <form
           className="grid gap-3"
