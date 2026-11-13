@@ -1,3 +1,4 @@
+import { RackSection } from "./rack";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Download, Play } from "lucide-react";
 import { useState } from "react";
@@ -425,6 +426,7 @@ export function Home({ trackSlug }: { trackSlug?: TrackSlug }) {
       <NetworkHero />
       <Facts />
       <Results />
+      <RackSection />
       <Work list={list} track={track} />
       <FieldWork />
       <ScreenDemos />
