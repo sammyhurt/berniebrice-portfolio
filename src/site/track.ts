@@ -73,13 +73,43 @@ function isOwnerOrBot(): boolean {
 
 const device = () => (/iPad|Tablet/i.test(navigator.userAgent) ? "tablet" : /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "phone" : "desktop");
 const sent = new Set<string>();
+const queue: { kind: "page" | "event"; page: string }[] = [];
+let firstSent = false;
+let flushing = false;
 
+/**
+ * To keep the number of calls low, the first page view of a visit is sent right away (so the visit always counts)
+ * and everything after it (more pages, clicks, plays) is held and sent together when the visitor leaves or hides the tab.
+ */
 function send(kind: "page" | "event", page: string) {
   const key = kind + ":" + page;
   if (sent.has(key) || isOwnerOrBot()) return;
   sent.add(key);
-  const body = JSON.stringify({ kind, page: page.slice(0, 80), code: visitCode(), session: session(), source: source(), device: device() });
+  const item = { kind, page: page.slice(0, 80) };
+  if (!firstSent) {
+    firstSent = true;
+    post([item]);
+    return;
+  }
+  queue.push(item);
+  if (!flushing) {
+    flushing = true;
+    const out = () => flush();
+    document.addEventListener("visibilitychange", () => document.visibilityState === "hidden" && out());
+    addEventListener("pagehide", out);
+  }
+  if (queue.length >= 12) flush();
+}
+
+function flush() {
+  if (!queue.length) return;
+  post(queue.splice(0, queue.length));
+}
+
+function post(items: { kind: string; page: string }[]) {
+  const body = JSON.stringify({ items, code: visitCode(), session: session(), source: source(), device: device() });
   try {
+    // keepalive lets the request finish even if the visitor is leaving the page
     void fetch(VISIT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body, keepalive: true }).catch(() => undefined);
   } catch {
     /* tracking never blocks the page */
